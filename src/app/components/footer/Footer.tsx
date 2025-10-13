@@ -1,5 +1,7 @@
+// MUI components
 import { Typography } from "@mui/material";
 
+// Footer component
 export default function Footer() {
     return (
         <>
@@ -15,7 +17,7 @@ export default function Footer() {
                     color="textSecondary"
                     align="center"
                 >
-                    © 2024 My Company
+                    © 2025 AssistSphare
                 </Typography>
             </footer>
         </>

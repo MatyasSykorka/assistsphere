@@ -7,6 +7,9 @@ import {
 } from "@mui/material";
 */
 
+// Import Next.js components
+import Link from "next/link";
+
 // Import custom components
 import Header from "@/app/components/header/Header";
 
@@ -16,8 +19,8 @@ export default function About() {
         <>
             <Header
                 title="About AssistSphere"
-                subtitle="Learn more about this project and its creator."
-            ></Header>
+                subtitle="Learn more about this project."
+            />
             <article
                 style={{
                     width: "50vw",
@@ -37,7 +40,38 @@ export default function About() {
                 <Typography
                     variant="body1"
                 >
-                    For more information about the project, its features, or to get in touch with the creator, please visit the Contact page.
+                    For more information about the project, its features, or to get in touch with the creator, please visit the&nbsp;
+                    <Link
+                        href="/contacts"
+                    >
+                        Contact page
+                    </Link>
+                    .
+                </Typography>
+                <Typography
+                    variant="h6"
+                >
+                    You can also check out the project's repository on
+                    <Link 
+                        href="https://github.com/MatyasSykorka/assistsphere"
+                        style={{ 
+                            marginLeft: "0.5rem",
+                            textDecoration: "none",
+                            color: "#1976d2"
+                        }}
+                    >
+                        GitHub
+                    </Link>
+                    .
+                </Typography>
+                <Typography
+                    variant="h5"
+                    style={{ 
+                        marginTop: "2rem",
+                        fontWeight: "bold" 
+                    }}
+                >
+                    Thank you for your interest in AssistSphere!
                 </Typography>
             </article>
         </>

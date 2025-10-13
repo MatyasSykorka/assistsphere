@@ -1,11 +1,13 @@
+// MUI components
 import { Typography } from "@mui/material";
 
+// Header component props
 type HeaderProps = {
     title?: string;
     subtitle?: string; // volitelný prop
 };
 
-
+// Header component
 export default function Header( { title, subtitle } : HeaderProps ) {
     return (
         <header>

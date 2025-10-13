@@ -1,4 +1,4 @@
-// import core libraries
+// Next.js components
 /*
 import {
     Link,
@@ -16,7 +16,7 @@ export default function Home() {
             <Header
                 title="Welcome to AssistSphere"
                 subtitle="Your solution for all assistance needs."
-            ></Header>
+            />
         </>
     );
 }
