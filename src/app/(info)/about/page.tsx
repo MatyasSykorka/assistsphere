@@ -35,7 +35,7 @@ export default function About() {
                 <Typography
                     variant="body1"
                 >
-                    The project is built using Next.js and Material-UI, ensuring a responsive and accessible user experience across different devices. It incorporates features such as user authentication, real-time notifications, and an intuitive interface to facilitate seamless interactions.
+                    The project is built using Next.js libraries and Material-UI, ensuring a responsive and accessible user experience across different devices. It incorporates features such as user authentication, real-time notifications, and an intuitive interface to facilitate seamless interactions.
                 </Typography>
                 <Typography
                     variant="body1"
@@ -50,15 +50,13 @@ export default function About() {
                 </Typography>
                 <Typography
                     variant="h6"
+                    style={{ 
+                        marginTop: "1rem" 
+                    }}
                 >
-                    You can also check out the project's repository on
+                    You can also check out the project&apos;s repository on&nbsp;
                     <Link 
                         href="https://github.com/MatyasSykorka/assistsphere"
-                        style={{ 
-                            marginLeft: "0.5rem",
-                            textDecoration: "none",
-                            color: "#1976d2"
-                        }}
                     >
                         GitHub
                     </Link>

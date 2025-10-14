@@ -7,9 +7,15 @@ export default function Footer() {
         <>
             <footer
                 style={{
-                    marginTop: "2rem",
+                    position: "fixed",
+                    left: 0,
+                    bottom: 0,
+                    width: "100vw",
                     padding: "1rem 0",
                     borderTop: "1px solid #ccc",
+                    background: "#fff",
+                    zIndex: 100,
+                    textAlign: "center"
                 }}
             >
                 <Typography
@@ -17,7 +23,7 @@ export default function Footer() {
                     color="textSecondary"
                     align="center"
                 >
-                    © 2025 AssistSphare
+                    &copy; 2025 AssistSphare
                 </Typography>
             </footer>
         </>

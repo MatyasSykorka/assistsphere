@@ -51,31 +51,58 @@ const NavDrawer: React.FC = () => {
                 </Button>
                 <Button
                     component={Link}
-                    href="/about"
+                    href="/report"
                 >
-                    About this project
+                    Report an issue
                 </Button>
-                
                 <Button
                     component={Link}
-                    href="/login"
+                    href="/my_tickets"
+                >
+                    My tickets
+                </Button>
+                <Button
+                    component={Link}
+                    href="/tickets"
+                >
+                    All tickets
+                </Button>
+                <Button
+                    component={Link}
+                    href="/users"
+                >
+                    Users
+                </Button>
+                <Button
+                    component={Link}
+                    href="/profile"
                     sx={{
                         marginTop: "auto"
                     }}
                 >
-                    Login
+                    Profile settings
                 </Button>
                 <Button
                     component={Link}
-                    href="/register"
+                    href="/settings"
                 >
-                    Register
+                    Settings
+                </Button>
+                <Button
+                    component={Link}
+                    href="/about"
+                >
+                    About this project
                 </Button>
                 <Button
                     component={Link}
                     href="/contacts"
                 >
                     Contacts
+                </Button>
+                <Button
+                >
+                    Log out
                 </Button>
                 <Button
                     color="secondary"

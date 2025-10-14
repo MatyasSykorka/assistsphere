@@ -5,14 +5,14 @@ import { Typography } from "@mui/material";
 import Link from "next/link";
 
 // Custom components
-import Header from "../components/header/Header";
+import Header from "../../components/header/Header";
 
 // Contact page component
 export default function Contact() {
     return (
         <>
             <Header
-                title="Contact Us"
+                title="Contact me"
                 subtitle="Get in touch with the AssistSphere creator."
             />
             <article
@@ -23,7 +23,7 @@ export default function Contact() {
                 <Typography
                     variant="h5"
                 >
-                    For inquiries, support, or feedback, please reach out to us at:
+                    For inquiries, support, or feedback, please reach out to me at:
                 </Typography>
                 <Typography
                     variant="h6"
@@ -44,14 +44,14 @@ export default function Contact() {
                     variant="h6"
                     style={{ marginTop: "1rem" }}
                 >
-                    Phone:
+                    LinkedIn:
                     <Link
-                        href="tel:+420603192889"
+                        href="https://www.linkedin.com/in/maty%C3%A1%C5%A1-s%C3%BDkora-090a4b2a4"
                     >
                         <Typography
                             variant="body1"
                         >
-                            +420 603 192 889
+                            Matyáš Sýkora
                         </Typography>
                     </Link>
                 </Typography>
