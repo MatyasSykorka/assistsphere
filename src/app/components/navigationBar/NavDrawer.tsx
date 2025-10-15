@@ -90,17 +90,19 @@ const NavDrawer: React.FC = () => {
                 </Button>
                 <Button
                     component={Link}
-                    href="/about"
-                >
-                    About this project
-                </Button>
-                <Button
-                    component={Link}
                     href="/contacts"
                 >
                     Contacts
                 </Button>
                 <Button
+                    component={Link}
+                    href="/about"
+                    color="secondary"
+                >
+                    About this project
+                </Button>
+                <Button
+                    color="error"
                 >
                     Log out
                 </Button>

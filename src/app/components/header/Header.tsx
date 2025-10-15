@@ -15,6 +15,10 @@ export default function Header( { title, subtitle } : HeaderProps ) {
                 variant="h2" 
                 component="h1" 
                 gutterBottom
+                sx={{
+                    marginTop: "3vh",
+                    fontWeight: "bold"
+                }}
             >
                 { title || "AssistSphere" }
             </Typography>
@@ -23,7 +27,7 @@ export default function Header( { title, subtitle } : HeaderProps ) {
                 component="h2" 
                 color="textSecondary"
                 sx={{
-                    marginBottom: "8vh"
+                    marginBottom: "5vh"
                 }}
             >
                 { subtitle || "Your solution for all assistance needs." }

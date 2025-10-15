@@ -2,7 +2,11 @@
 // import Link from "next/link";
 
 // MUI components
-import Typography from "@mui/material/Typography";
+import {
+    Typography,
+    Container,
+    /* Box */
+} from "@mui/material";
 
 // import custom components
 import Header from "@/app/components/header/Header";
@@ -21,6 +25,14 @@ export default function Settings() {
                 >
                     Here you can adjust dark mode and other application settings.
                 </Typography>
+                <Container
+                    /* Container atributes */
+                    style={{
+                        /* Style */
+                    }}
+                >
+                    {/* Settings options will go here in the future */}
+                </Container>
             </article>
         </>
     );

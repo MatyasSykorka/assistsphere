@@ -23,13 +23,13 @@ export default function Home() {
                 title="Welcome to AssistSphere"
                 subtitle="Your solution for all assistance needs."
             />
-            <article>
+            <main>
                 <Typography
                     variant="h4"
                 >
                     To sand a report ticket, please log in with...
                 </Typography>
-            </article>
+            </main>
             <menu>
                 <Button
                     href="/login"

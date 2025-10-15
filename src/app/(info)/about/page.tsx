@@ -1,11 +1,5 @@
 // Import MUI components
 import { Typography } from "@mui/material";
-/*
-import {
-    Button,
-    Link
-} from "@mui/material";
-*/
 
 // Import Next.js components
 import Link from "next/link";
