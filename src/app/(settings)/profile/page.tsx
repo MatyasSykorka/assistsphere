@@ -1,7 +1,7 @@
 // Next.js components
 // import Link from "next/link";
 
-// MUI components
+// MUI component list
 import {
     Typography,
     Container,
