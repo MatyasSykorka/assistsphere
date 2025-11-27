@@ -20,9 +20,9 @@ const NavDrawer: React.FC = () => {
                 variant="outlined"
                 onClick={ () => setOpen(true) }
                 sx={{
-                    position: 'fixed',
-                    top: '1rem',
-                    right: '1rem'
+                    position: "fixed",
+                    top: "1rem",
+                    right: "1rem"
                 }}
             >
                 <MenuIcon />
@@ -32,13 +32,13 @@ const NavDrawer: React.FC = () => {
                 open={open} 
                 onClose={() => setOpen(false)}
                 sx={{
-                    '& .MuiDrawer-paper': {
-                        display: 'flex',
-                        flexDirection: 'column',
-                        padding: '1rem',
-                        width: '15vw',
-                        boxSizing: 'border-box',
-                        gap: '0.5rem'
+                    "& .MuiDrawer-paper": {
+                        display: "flex",
+                        flexDirection: "column",
+                        padding: "1rem",
+                        width: "15vw",
+                        boxSizing: "border-box",
+                        gap: "0.5rem"
                     },
                 }}
             >

@@ -3,6 +3,8 @@ import { Typography } from "@mui/material";
 
 // Footer component
 export default function Footer() {
+    const Year: number = new Date().getFullYear();
+
     return (
         <>
             <footer
@@ -23,7 +25,7 @@ export default function Footer() {
                     color="textSecondary"
                     align="center"
                 >
-                    &copy; 2025 AssistSphare
+                    &copy; { Year } AssistSphare
                 </Typography>
             </footer>
         </>
