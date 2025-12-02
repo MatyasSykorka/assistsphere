@@ -62,12 +62,13 @@ model status {
 model ticket {
   ticket_id                                                     Int                @id @default(autoincrement())
   reported_user                                                 Int
+  ticket_title                                                  String             @db.VarChar(255)
   room                                                          Int
   category                                                      Int
   description                                                   Int
   priority                                                      Int
   status                                                        Int                @default(1)
-  created_time                                                  DateTime           @db.Timestamp(6)
+  created_time                                                  DateTime           @default(now()) @db.Timestamptz(6)
   updated_status                                                DateTime?          @db.Timestamp(6)
   solved_at                                                     DateTime?          @db.Timestamp(6)
   ticket_attachment                                             Int?

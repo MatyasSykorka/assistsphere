@@ -10,8 +10,13 @@ import Header from "@/app/components/header/Header";
 import { Container, Box } from "@mui/material";
 
 // Tickets page component
-export default function Tickets() {
-    const tickets = prisma.ticket.findMany();
+export default async function Tickets() {
+    const tickets = await prisma.ticket.findMany({
+        include: {
+            description_ticket_descriptionTodescription: true
+        }
+    });
+
 
     return (
         <>
@@ -27,31 +32,31 @@ export default function Tickets() {
                 </Typography>
             </article>
             <Container>
-                <Box
-                    sx={{
-                        marginTop: "2rem",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "1rem"
-                    }}
-                >
+                <Box>
                     {tickets.map((ticket) => (
-                        <Box
-                            key={ticket.id}
-                            sx={{
-                                padding: "1rem",
-                                border: "1px solid #ccc",
-                                borderRadius: "8px"
+                        <Box 
+                            key={ticket.ticket_id} 
+                            sx={{ 
+                                mb: 2, 
+                                p: 2, 
+                                border: '1px solid #ccc', 
+                                borderRadius: '8px' 
                             }}
                         >
                             <Typography variant="h6">
-                                {ticket.title}
+                                Ticket ID: {ticket.ticket_id}
                             </Typography>
                             <Typography variant="body1">
-                                {ticket.description}
+                                Subject: {ticket.ticket_title}
                             </Typography>
-                            <Typography variant="caption" color="textSecondary">
+                            <Typography variant="body2">
                                 Status: {ticket.status}
+                            </Typography>
+                            <Typography key={ ticket.ticket_id } variant="body2">
+                                Ticket description:&nbsp;
+                                <span>
+                                    {ticket.description_ticket_descriptionTodescription?.description}
+                                </span>
                             </Typography>
                         </Box>
                     ))}
