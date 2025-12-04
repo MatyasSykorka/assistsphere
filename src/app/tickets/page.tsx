@@ -7,15 +7,42 @@ import Typography from "@mui/material/Typography";
 
 // import custom components
 import Header from "@/app/components/header/Header";
-import { Container, Box } from "@mui/material";
+import { 
+    Container, 
+    Box, 
+    Card, 
+    CardContent, 
+    CardActions, 
+    Button 
+} from "@mui/material";
+import { color } from "bun";
 
 // Tickets page component
 export default async function Tickets() {
     const tickets = await prisma.ticket.findMany({
         include: {
-            description_ticket_descriptionTodescription: true
+            description_ticket_descriptionTodescription: true,
+            room_ticket_roomToroom: true,
+            status_ticket_statusTostatus: true,
         }
     });
+
+    function getStatusColor(
+        statusName: string | undefined
+    ) {
+        switch (statusName) {
+            case "Open":
+                return "orange";
+            case "In Progress":
+                return "blue";
+            case "Resolved":
+                return "green";
+            case "Rejected":
+                return "red";
+            default:
+                return "grey";
+        }
+    }
 
 
     return (
@@ -31,36 +58,95 @@ export default async function Tickets() {
                     Here you can view and manage all support tickets submitted by users.
                 </Typography>
             </article>
-            <Container>
-                <Box>
-                    {tickets.map((ticket) => (
-                        <Box 
-                            key={ticket.ticket_id} 
-                            sx={{ 
-                                mb: 2, 
-                                p: 2, 
-                                border: '1px solid #ccc', 
-                                borderRadius: '8px' 
-                            }}
-                        >
-                            <Typography variant="h6">
-                                Ticket ID: {ticket.ticket_id}
+            <Container
+                sx={{ 
+                    display: 'flex', 
+                    flexWrap: 'wrap', 
+                    gap: 2, 
+                    mt: 4,
+                    justifyContent: 'space-between'
+                }}
+            >
+                {tickets.map((ticket) => (
+                    <Card 
+                        key={ ticket.ticket_id } 
+                        sx={{ 
+                            mb: 2, 
+                            p: 2, 
+                            border: '1px solid #ccc', 
+                            borderRadius: '8px', 
+                            width: '27%',
+                            height: '220px',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between'
+                        }}
+                    >
+                        <CardContent>
+                            <Typography 
+                                variant="body1"
+                            >
+                                Ticket number:&nbsp; 
+                                <b>
+                                    { ticket.ticket_id }
+                                </b>
                             </Typography>
-                            <Typography variant="body1">
-                                Subject: {ticket.ticket_title}
+                            <Typography 
+                                variant="h5"
+                            >
+                                <b>
+                                    { ticket.ticket_title }
+                                </b>
                             </Typography>
-                            <Typography variant="body2">
-                                Status: {ticket.status}
+                            <Typography 
+                                variant="body2"
+                                sx={{ 
+                                    color: getStatusColor(
+                                        ticket.status_ticket_statusTostatus?.status_name
+                                    )
+                                }}
+                            >
+                                Status:&nbsp;
+                                <b>
+                                    { ticket.status_ticket_statusTostatus?.status_name ?? "Unknown" }
+                                </b>
                             </Typography>
-                            <Typography key={ ticket.ticket_id } variant="body2">
-                                Ticket description:&nbsp;
-                                <span>
-                                    {ticket.description_ticket_descriptionTodescription?.description}
-                                </span>
+                            <Typography
+                                variant="body2"
+                            >
+                                Room:&nbsp;
+                                <b>
+                                    { ticket.room_ticket_roomToroom?.name }
+                                </b>
                             </Typography>
-                        </Box>
-                    ))}
-                </Box>
+                            {
+                                /*
+                                // make description under a show more button
+                                    <Typography 
+                                        key={ ticket.ticket_id } 
+                                        variant="body2"
+                                    >
+                                        Ticket description:&nbsp;
+                                        <span>
+                                            { ticket.description_ticket_descriptionTodescription?.description }
+                                        </span>
+                                    </Typography>
+                                */
+                            }
+                        </CardContent>
+                        <CardActions>
+                            <Button
+                                size="small"
+                                variant="outlined"
+                                sx={{
+                                    marginTop: "auto"
+                                }}
+                            >
+                                Show more
+                            </Button>
+                        </CardActions>
+                    </Card>
+                ))}
             </Container>
         </>
     );
