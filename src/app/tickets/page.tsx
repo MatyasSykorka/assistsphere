@@ -9,13 +9,11 @@ import Typography from "@mui/material/Typography";
 import Header from "@/app/components/header/Header";
 import { 
     Container, 
-    Box, 
     Card, 
     CardContent, 
     CardActions, 
     Button 
 } from "@mui/material";
-import { color } from "bun";
 
 // Tickets page component
 export default async function Tickets() {
@@ -24,6 +22,8 @@ export default async function Tickets() {
             description_ticket_descriptionTodescription: true,
             room_ticket_roomToroom: true,
             status_ticket_statusTostatus: true,
+            users_ticket_reported_userTousers: true,
+            users_ticket_processing_userTousers: true
         }
     });
 
@@ -117,6 +117,26 @@ export default async function Tickets() {
                                 Room:&nbsp;
                                 <b>
                                     { ticket.room_ticket_roomToroom?.name }
+                                </b>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                            >
+                                Created by:&nbsp;
+                                <b>
+                                    { ticket.users_ticket_reported_userTousers?.name }
+                                    &nbsp;
+                                    { ticket.users_ticket_reported_userTousers?.surname }
+                                </b>
+                            </Typography>
+                            <Typography
+                                variant="body2"
+                            >
+                                Processing user:&nbsp;
+                                <b>
+                                    { 
+                                    ticket.users_ticket_processing_userTousers
+                                        ? `${ ticket.users_ticket_processing_userTousers.name } ${ ticket.users_ticket_processing_userTousers.surname }` : "nobody" }
                                 </b>
                             </Typography>
                             {
