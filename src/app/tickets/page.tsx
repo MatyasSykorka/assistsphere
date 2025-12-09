@@ -4,9 +4,6 @@ import { prisma } from "@/lib/prisma";
 
 // MUI components
 import Typography from "@mui/material/Typography";
-
-// import custom components
-import Header from "@/app/components/header/Header";
 import { 
     Container, 
     Card, 
@@ -14,6 +11,18 @@ import {
     CardActions, 
     Button 
 } from "@mui/material";
+
+// MUI color imports
+import { 
+    deepOrange, 
+    blue,
+    green,
+    red,
+    grey
+} from "@mui/material/colors";
+
+// import custom components
+import Header from "@/app/components/header/Header";
 
 // Tickets page component
 export default async function Tickets() {
@@ -32,15 +41,15 @@ export default async function Tickets() {
     ) {
         switch (statusName) {
             case "Open":
-                return "orange";
+                return `${deepOrange[500]}`;
             case "In Progress":
-                return "blue";
+                return `${blue[500]}`;
             case "Resolved":
-                return "green";
+                return `${green[700]}`;
             case "Rejected":
-                return "red";
+                return `${red[500]}`;
             default:
-                return "grey";
+                return `${grey[500]}`;
         }
     }
 
@@ -57,14 +66,27 @@ export default async function Tickets() {
                 >
                     Here you can view and manage all support tickets submitted by users.
                 </Typography>
+                
+                
+                <Typography
+                    variant="h3"
+                    fontWeight="bold"
+                    sx={{
+                        color: red[700],
+                    }}
+                >
+                    Add sorting and filtering options in the future!
+                </Typography>
+
+
+
+                
             </article>
             <Container
-                sx={{ 
-                    display: 'flex', 
-                    flexWrap: 'wrap', 
+                sx={{  
                     gap: 2, 
                     mt: 4,
-                    justifyContent: 'space-between'
+                    mb: 4,
                 }}
             >
                 {tickets.map((ticket) => (
@@ -74,12 +96,7 @@ export default async function Tickets() {
                             mb: 2, 
                             p: 2, 
                             border: '1px solid #ccc', 
-                            borderRadius: '8px', 
-                            width: '27%',
-                            height: '220px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            justifyContent: 'space-between'
+                            borderRadius: '8px',
                         }}
                     >
                         <CardContent>
@@ -100,16 +117,20 @@ export default async function Tickets() {
                             </Typography>
                             <Typography 
                                 variant="body2"
-                                sx={{ 
+                            >
+                                Status:&nbsp;
+                                <Typography
+                                    component="span"
+                                    fontWeight="bold"
+                                    variant="body2"
+                                    sx={{ 
                                     color: getStatusColor(
                                         ticket.status_ticket_statusTostatus?.status_name
                                     )
                                 }}
-                            >
-                                Status:&nbsp;
-                                <b>
+                                >
                                     { ticket.status_ticket_statusTostatus?.status_name ?? "Unknown" }
-                                </b>
+                                </Typography>
                             </Typography>
                             <Typography
                                 variant="body2"

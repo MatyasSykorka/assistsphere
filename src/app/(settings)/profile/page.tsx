@@ -9,12 +9,36 @@ import {
     Box
 } from "@mui/material";
 
+// MUI color imports
+import { cyan } from '@mui/material/colors';
+
+// import prisma client
+import { prisma } from "@/lib/prisma";
 
 // import custom components
 import Header from "@/app/components/header/Header";
+import ProfileSecTxt from "@/app/components/profileTxt/ProfileSecTxt";
+import ProfileTxt from "@/app/components/profileTxt/ProfileTxt";
 
 // Profile settings page component
-export default function Profile() {
+export default async function Profile() {
+    // Zde by měl být získán aktuální uživatel, např. podle session
+    // Pro ukázku použiji prvního uživatele v DB
+    const User = await prisma.users.findFirst({
+        include: {
+            ticket_ticket_reported_userTousers: true,
+            ticket_ticket_processing_userTousers: true,
+            ticket_attachment: true,
+        }
+    });
+
+    // Statistika
+    const stats = {
+        reportedTickets: User?.ticket_ticket_reported_userTousers.length ?? 0,
+        processedTickets: User?.ticket_ticket_processing_userTousers.length ?? 0,
+        uploadedAttachments: User?.ticket_attachment.length ?? 0,
+    };
+
     return (
         <>
             <Header
@@ -29,7 +53,7 @@ export default function Profile() {
                         fontWeight: "bold" 
                     }}
                 >
-                    displayUsername
+                    {User?.username ?? "displayUsername"}
                 </Typography>
                 <Container
                     style={{
@@ -42,53 +66,65 @@ export default function Profile() {
                         borderRadius: "1.5rem",
                         width: "50vw",
                         alignSelf: "center",
-                        marginBottom: "3vh"
+                        marginBottom: "6vh"
                     }}
                 >
-                    <Typography
-                        color="textSecondary"
-                        variant="h5"
+                    {
+                        /*
+                        <ProfileSecTxt
+                            params={Promise.resolve({ SecTxt: "User Information" })}
+                        />
+                        */
+                    }
+                    <ProfileSecTxt
+                        params={Promise.resolve({ SecTxt: "Name:" })}
+                    />
+                    <ProfileTxt
+                        params={Promise.resolve({ UserInfo: `${User?.name ?? "displayName"}` })}
+                    />
+                    <ProfileSecTxt
+                        params={Promise.resolve({ SecTxt: "Surname:" })}
+                    />
+                    <ProfileTxt
+                        params={Promise.resolve({ UserInfo: `${User?.surname ?? "displaySurname"}` })}
+                    />
+                    <ProfileSecTxt
+                        params={Promise.resolve({ SecTxt: "Email:" })}
+                    />
+                    <ProfileTxt
+                        params={Promise.resolve({ UserInfo: `${User?.email ?? "displayEmail"}` })}
+                    />
+                    <ProfileSecTxt
+                        params={Promise.resolve({ SecTxt: "Phone number:" })}
+                    />
+                    <ProfileTxt
+                        params={Promise.resolve({ UserInfo: `${User?.phone_number ?? "displayPhoneNum"}` })}
+                    />
+                    <Box
+                        sx={{
+                            marginTop: "2rem",
+                            padding: "1rem",
+                            borderRadius: "1rem",
+                            backgroundColor: `${cyan[300]}`
+                        }}
                     >
-                        Name:
-                    </Typography>
-                    <Typography
-                        variant="h5"
-                    >
-                        displayName
-                    </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="h5"
-                    >
-                        Surname:
-                    </Typography>
-                    <Typography
-                        variant="h5"
-                    >
-                        displaySurname
-                    </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="h5"
-                    >
-                        Email:
-                    </Typography>
-                    <Typography
-                        variant="h5"
-                    >
-                        displayEmail
-                    </Typography>
-                    <Typography
-                        color="textSecondary"
-                        variant="h5"
-                    >
-                        Phone number:
-                    </Typography>
-                    <Typography
-                        variant="h5"
-                    >
-                        displayPhoneNum
-                    </Typography>
+                        <Typography 
+                            variant="h5" 
+                            fontWeight="bold"
+                        >
+                            User statistics:
+                        </Typography>
+                        <Typography>
+                            Počet nahlášených ticketů: {stats.reportedTickets}
+                        </Typography>
+                        <Typography>
+                            Počet zpracovaných ticketů: {stats.processedTickets}
+                        </Typography>
+                        <Typography>
+                            Počet nahraných příloh: {stats.uploadedAttachments}
+                        </Typography>
+                    </Box>
+
                     <Box
                         sx={{
                             display: "flex",
@@ -113,13 +149,6 @@ export default function Profile() {
                             Change phone number
                         </Button>
                     </Box>
-
-                    {/*
-                    Maybe this button will change 
-                    from server component to client component in the future
-
-                    Because it will show modal component for confirmation
-                    */}
                     <Button
                         variant="outlined"
                         color="error"

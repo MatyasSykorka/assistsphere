@@ -15,9 +15,9 @@ export default function Footer() {
                     width: "100vw",
                     padding: "1rem 0",
                     borderTop: "1px solid #ccc",
-                    background: "#fff",
                     zIndex: 100,
-                    textAlign: "center"
+                    textAlign: "center",
+                    backgroundColor: "#fff"
                 }}
             >
                 <Typography

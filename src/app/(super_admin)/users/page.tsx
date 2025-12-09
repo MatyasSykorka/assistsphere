@@ -13,6 +13,11 @@ import {
     Button
 } from "@mui/material";
 
+// MUI color imports
+import { 
+    blue,
+} from "@mui/material/colors";
+
 // import custom components
 import Header from "@/app/components/header/Header";
 
@@ -51,7 +56,11 @@ export default async function Users() {
 
                 >
                     <TableHead>
-                        <TableRow>
+                        <TableRow
+                            sx={{
+                                backgroundColor: `${blue[100]}`
+                            }}
+                        >
                             <TableCell
                                 variant="head"
                             >
@@ -93,7 +102,10 @@ export default async function Users() {
                     </TableHead>
                     <TableBody>
                         {Users.map((user) => (
-                            <TableRow key={user.user_id}>
+                            <TableRow 
+                                key={user.user_id}
+                                hover
+                            >
                                 <TableCell>
                                     {user.user_id}
                                 </TableCell>
