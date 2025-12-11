@@ -3,23 +3,13 @@
 
 // MUI components
 import { 
-    Container, 
     Typography,
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableRow,
-    Button
 } from "@mui/material";
 
-// MUI color imports
-import { 
-    blue,
-} from "@mui/material/colors";
 
 // import custom components
 import Header from "@/app/components/header/Header";
+import UsersTable from "../../components/userTable/UsersTable";
 
 // import prisma client
 import { prisma } from "@/lib/prisma";
@@ -46,6 +36,10 @@ export default async function Users() {
                     Here you can view and manage all user accounts, including roles and permissions.
                 </Typography>
             </article>
+            <UsersTable 
+                users={Users}
+            />
+            {/*
             <Container>
                 <Table
                     sx={{ 
@@ -153,6 +147,7 @@ export default async function Users() {
                     </TableBody>
                 </Table>
             </Container>
+            */}
         </>
     );
 }

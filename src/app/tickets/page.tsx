@@ -41,7 +41,7 @@ export default async function Tickets() {
     ) {
         switch (statusName) {
             case "Open":
-                return `${deepOrange[500]}`;
+                return `${deepOrange[400]}`;
             case "In Progress":
                 return `${blue[500]}`;
             case "Resolved":
@@ -66,21 +66,6 @@ export default async function Tickets() {
                 >
                     Here you can view and manage all support tickets submitted by users.
                 </Typography>
-                
-                
-                <Typography
-                    variant="h3"
-                    fontWeight="bold"
-                    sx={{
-                        color: red[700],
-                    }}
-                >
-                    Add sorting and filtering options in the future!
-                </Typography>
-
-
-
-                
             </article>
             <Container
                 sx={{  
