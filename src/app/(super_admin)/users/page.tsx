@@ -22,6 +22,8 @@ export default async function Users() {
             role_users_roleTorole: true
         }
     });
+    
+    const roles = await prisma.role.findMany();
 
     return (
         <>
@@ -38,6 +40,7 @@ export default async function Users() {
             </article>
             <UsersTable 
                 users={Users}
+                roles={roles}
             />
             {/*
             <Container>

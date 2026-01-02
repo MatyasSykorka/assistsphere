@@ -38,8 +38,14 @@ type userWithRole = {
 
 type User = Prisma.usersGetPayload<userWithRole>;
 
+interface Role {
+    role_id: number;
+    role_name: string;
+}
+
 interface UsersTableProps {
     users: User[];
+    roles: Role[];
 }
 
 type Order = 'asc' | 'desc';
@@ -107,7 +113,7 @@ const headCells: readonly HeadCell[] = [
     { id: 'actions',                label: 'Actions'    },
 ];
 
-export default function UsersTable({ users }: UsersTableProps) {
+export default function UsersTable({ users, roles }: UsersTableProps) {
     const [order, setOrder] = useState<Order>('asc');
     const [orderBy, setOrderBy] = useState<keyof User>('user_id');
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -201,24 +207,30 @@ export default function UsersTable({ users }: UsersTableProps) {
                                 <TableCell>{user.surname}</TableCell>
                                 <TableCell>{user.username}</TableCell>
                                 <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.role_users_roleTorole?.role_name ?? "N/A"}</TableCell>
+                                <TableCell>{user.role_users_roleTorole?.role_name}</TableCell>
                                 <TableCell>
-                                    <Button 
-                                        variant="contained" 
-                                        color="error" 
-                                        size="small"
-                                    >
-                                        Delete
-                                    </Button>
-                                    <Button 
-                                        variant="contained" 
-                                        color="primary" 
-                                        size="small" 
-                                        sx={{ ml: 1 }}
-                                        onClick={() => handleOpenChangeRoleModal(user)}
-                                    >
-                                        Change role
-                                    </Button>
+                                    {
+                                        user.role_users_roleTorole?.role_id !== 1 && (
+                                            <>
+                                                <Button 
+                                                    variant="contained" 
+                                                    color="error" 
+                                                    size="small"
+                                                >
+                                                    Delete
+                                                </Button>
+                                                <Button 
+                                                    variant="contained" 
+                                                    color="primary" 
+                                                    size="small" 
+                                                    sx={{ ml: 1 }}
+                                                    onClick={() => handleOpenChangeRoleModal(user)}
+                                                >
+                                                    Change role
+                                                </Button>
+                                            </>
+                                        )
+                                    }
                                 </TableCell>
                             </TableRow>
                         ))}
@@ -229,6 +241,7 @@ export default function UsersTable({ users }: UsersTableProps) {
                 open={isModalOpen}
                 onClose={handleCloseChangeRoleModal}
                 user={selectedUser}
+                roles={roles}
             />
         </Container>
     );

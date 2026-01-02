@@ -13,11 +13,13 @@ import {
     MenuItem
 } from "@mui/material";
 
+import { useRouter } from "next/navigation";
+import { updateUserRole } from "@/app/actions/updateUserRole";
+
 import { SelectChangeEvent } from "@mui/material/Select";
 
 import { Prisma } from '@prisma/client';
 
-// This creates a type based on the Prisma query from the parent page, ensuring type safety.
 type userWithRole = {
     include: { role_users_roleTorole: true }
 };
@@ -28,14 +30,20 @@ interface ChangeRoleModalProps {
     open: boolean;
     onClose: () => void;
     user: User | null;
+    roles: { 
+        role_id: number, 
+        role_name: string 
+    }[];
 }
 
 export default function ChangeRoleModal({ 
     open, 
     onClose, 
-    user 
+    user,
+    roles
 }: ChangeRoleModalProps) {
     const [role, setRole] = React.useState('');
+    const router = useRouter();
 
     if (!user) {
         return null;
@@ -43,6 +51,14 @@ export default function ChangeRoleModal({
 
     const handleChange = (event: SelectChangeEvent) => {
         setRole(event.target.value);
+    };
+
+    const handleConfirm = async () => {
+        if (user && role) {
+            await updateUserRole(user.user_id, Number(role));
+            router.refresh();
+            onClose();
+        }
     };
 
     return (
@@ -54,11 +70,19 @@ export default function ChangeRoleModal({
         >
             <DialogTitle>Change role for {user.name} {user.surname}</DialogTitle>
             <DialogContent>
+                <Typography>
+                    Current role: {user.role_users_roleTorole?.role_name ?? "N/A"}
+                </Typography>
+                <Typography 
+                    sx={{ 
+                        mt: 2
             <Typography>
                 Current role: {user.role_users_roleTorole?.role_name ?? "N/A"}
             </Typography>
             <Typography 
-                sx={{ mt: 2 }}
+                sx={{ 
+                    mt: 2
+                }}
             >
                 <InputLabel 
                     id="demo-simple-select-helper-label"
@@ -69,33 +93,62 @@ export default function ChangeRoleModal({
                     labelId="role-select-label"
                     id="role-select"
                     value={role}
-                    label="Role"
                     onChange={handleChange}
+                    sx={{
+                        minWidth: "10vw"
+                    }}
                 >
-                    <MenuItem 
-                        value={user.role_users_roleTorole?.role_id /*set administrator*/}
+                    <InputLabel 
+                        id="demo-simple-select-helper-label"
                     >
-                        Administrator
-                    </MenuItem>
-                    <MenuItem 
-                        value={user.role_users_roleTorole?.role_id /*set manager*/}
+                        Role
+                    </InputLabel>
+                    <Select
+                        labelId="role-select-label"
+                        id="role-select"
+                        value={role}
+                        onChange={handleChange}
+                        sx={{
+                            minWidth: "10vw"
+                        }}
                     >
-                        Manager
-                    </MenuItem>
-                    <MenuItem 
-                        value={user.role_users_roleTorole?.role_id /*set reporter*/}
-                    >
-                        Reporter
-                    </MenuItem>
+                        {roles.filter(r => r.role_name !== "Administrator").map(r => (
+                            <MenuItem key={r.role_id} value={r.role_id}>
+                                {r.role_name}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Typography>
+                    {roles.filter(r => r.role_name !== "Administrator").map(r => (
+                        <MenuItem key={r.role_id} value={r.role_id}>
+                            {r.role_name}
+                        </MenuItem>
+                    ))}
                 </Select>
             </Typography>
             </DialogContent>
             <DialogActions>
-            <Button onClick={onClose}>
+                <Button
+                    variant="outlined"
+                    onClick={onClose}
+                >
+                    Cancel
+                </Button>
+                <Button 
+                    onClick={onClose} 
+                    variant="contained" 
+                    autoFocus
+                >
+                    Confirm
+                </Button>
+            <Button
+                variant="outlined"
+                onClick={onClose}
+            >
                 Cancel
             </Button>
             <Button 
-                onClick={onClose} 
+                onClick={handleConfirm} 
                 variant="contained" 
                 autoFocus
             >
