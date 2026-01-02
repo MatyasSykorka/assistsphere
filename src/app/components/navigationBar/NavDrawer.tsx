@@ -4,15 +4,24 @@
 // Next.js components
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 // MUI components
 import Drawer from "@mui/material/Drawer";
 import Button from "@mui/material/Button";
 import MenuIcon from '@mui/icons-material/Menu';
 
+import { authClient } from "@/lib/auth-client";
+
 // Navigation drawer component
 const NavDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await authClient.signOut();
+        router.push("/login");
+    };
 
     return (
         <>
@@ -103,6 +112,7 @@ const NavDrawer: React.FC = () => {
                 </Button>
                 <Button
                     color="error"
+                    onClick={handleLogout}
                 >
                     Log out
                 </Button>

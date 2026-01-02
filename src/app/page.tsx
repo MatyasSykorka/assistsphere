@@ -27,7 +27,7 @@ export default function Home() {
                 <Typography
                     variant="h4"
                 >
-                    To sand a report ticket, please log in with...
+                    To sand a report ticket, please log in or register an account.
                 </Typography>
             </main>
             <menu>
@@ -41,6 +41,17 @@ export default function Home() {
                     }}
                 >
                     Log in
+                </Button>
+                <Button
+                    href="/register"
+                    component={Link}
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                        marginTop: "1rem"
+                    }}
+                >
+                    Register
                 </Button>
             </menu>
         </>

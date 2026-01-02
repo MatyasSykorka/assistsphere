@@ -10,11 +10,11 @@ import {
     Typography,
     Select,
     InputLabel,
-    MenuItem
+    MenuItem,
+    FormControl
 } from "@mui/material";
 
 import { useRouter } from "next/navigation";
-import { updateUserRole } from "@/app/actions/updateUserRole";
 
 import { SelectChangeEvent } from "@mui/material/Select";
 
@@ -23,6 +23,8 @@ import { Prisma } from '@prisma/client';
 type userWithRole = {
     include: { role_users_roleTorole: true }
 };
+
+import { updateUserRole } from "@/app/components/modals/changeRole/updateUserRole";
 
 type User = Prisma.usersGetPayload<userWithRole>;
 
@@ -42,8 +44,16 @@ export default function ChangeRoleModal({
     user,
     roles
 }: ChangeRoleModalProps) {
-    const [role, setRole] = React.useState('');
+    const [role, setRole] = React.useState<string | number>('');
     const router = useRouter();
+
+    React.useEffect(() => {
+        if (user?.role_users_roleTorole?.role_id) {
+            setRole(user.role_users_roleTorole.role_id);
+        } else {
+            setRole('');
+        }
+    }, [user]);
 
     if (!user) {
         return null;
@@ -73,33 +83,9 @@ export default function ChangeRoleModal({
                 <Typography>
                     Current role: {user.role_users_roleTorole?.role_name ?? "N/A"}
                 </Typography>
-                <Typography 
-                    sx={{ 
-                        mt: 2
-            <Typography>
-                Current role: {user.role_users_roleTorole?.role_name ?? "N/A"}
-            </Typography>
-            <Typography 
-                sx={{ 
-                    mt: 2
-                }}
-            >
-                <InputLabel 
-                    id="demo-simple-select-helper-label"
-                >
-                    Role
-                </InputLabel>
-                <Select
-                    labelId="role-select-label"
-                    id="role-select"
-                    value={role}
-                    onChange={handleChange}
-                    sx={{
-                        minWidth: "10vw"
-                    }}
-                >
+                <FormControl fullWidth sx={{ mt: 2 }}>
                     <InputLabel 
-                        id="demo-simple-select-helper-label"
+                        id="role-select-label"
                     >
                         Role
                     </InputLabel>
@@ -107,10 +93,8 @@ export default function ChangeRoleModal({
                         labelId="role-select-label"
                         id="role-select"
                         value={role}
+                        label="Role"
                         onChange={handleChange}
-                        sx={{
-                            minWidth: "10vw"
-                        }}
                     >
                         {roles.filter(r => r.role_name !== "Administrator").map(r => (
                             <MenuItem key={r.role_id} value={r.role_id}>
@@ -118,14 +102,7 @@ export default function ChangeRoleModal({
                             </MenuItem>
                         ))}
                     </Select>
-                </Typography>
-                    {roles.filter(r => r.role_name !== "Administrator").map(r => (
-                        <MenuItem key={r.role_id} value={r.role_id}>
-                            {r.role_name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </Typography>
+                </FormControl>
             </DialogContent>
             <DialogActions>
                 <Button
@@ -134,19 +111,6 @@ export default function ChangeRoleModal({
                 >
                     Cancel
                 </Button>
-                <Button 
-                    onClick={onClose} 
-                    variant="contained" 
-                    autoFocus
-                >
-                    Confirm
-                </Button>
-            <Button
-                variant="outlined"
-                onClick={onClose}
-            >
-                Cancel
-            </Button>
             <Button 
                 onClick={handleConfirm} 
                 variant="contained" 
