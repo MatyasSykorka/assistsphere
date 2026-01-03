@@ -18,10 +18,9 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
     const [name, setName] = useState("");
-    const [username, setUsername] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -30,6 +29,12 @@ export default function RegisterPage() {
         e.preventDefault();
         setLoading(true);
         setError("");
+
+        if (password !== confirmPassword) {
+            setError("Passwords do not match");
+            setLoading(false);
+            return;
+        }
 
         const { 
             data, 
@@ -133,6 +138,8 @@ export default function RegisterPage() {
                             type="password"
                             id="confirmPassword"
                             autoComplete="new-password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
                         />
                         <Button
                             type="submit"
@@ -150,7 +157,8 @@ export default function RegisterPage() {
                         <Box 
                             sx={{ 
                                 textAlign: "center" 
-                            }}>
+                            }}
+                        >
                             <MuiLink 
                                 component={Link} 
                                 href="/login" 

@@ -1,5 +1,7 @@
 // Next.js components
 // import Link from "next/link";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 // MUI component list
 import {
@@ -14,29 +16,40 @@ import { cyan } from '@mui/material/colors';
 
 // import prisma client
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
 // import custom components
 import Header from "@/app/components/header/Header";
 import ProfileSecTxt from "@/app/components/profileTxt/ProfileSecTxt";
 import ProfileTxt from "@/app/components/profileTxt/ProfileTxt";
 
+import AddPhoneNumber from "@/app/components/modals/AddPhoneNumber";
+
 // Profile settings page component
 export default async function Profile() {
-    // Zde by měl být získán aktuální uživatel, např. podle session
-    // Pro ukázku použiji prvního uživatele v DB
-    const User = await prisma.users.findFirst({
+    const session = await auth.api.getSession({
+        headers: await headers()
+    });
+
+    if (!session) {
+        redirect("/");
+    }
+
+    const User = await prisma.user.findUnique({
+        where: {
+            id: session.user.id
+        },
         include: {
-            ticket_ticket_reported_userTousers: true,
-            ticket_ticket_processing_userTousers: true,
-            ticket_attachment: true,
+            ticket_ticket_reported_userToUser: true,
+            ticket_ticket_processing_userToUser: true,
+            ticket_attachments: true,
         }
     });
 
     // Statistika
     const stats = {
-        reportedTickets: User?.ticket_ticket_reported_userTousers.length ?? 0,
-        processedTickets: User?.ticket_ticket_processing_userTousers.length ?? 0,
-        uploadedAttachments: User?.ticket_attachment.length ?? 0,
+        reportedTickets: User?.ticket_ticket_reported_userToUser.length ?? 0,
+        processedTickets: User?.ticket_ticket_processing_userToUser.length ?? 0
     };
 
     return (
@@ -53,7 +66,7 @@ export default async function Profile() {
                         fontWeight: "bold" 
                     }}
                 >
-                    {User?.username ?? "displayUsername"}
+                    {User?.name ?? "displayUsername"}
                 </Typography>
                 <Container
                     style={{
@@ -81,12 +94,6 @@ export default async function Profile() {
                     />
                     <ProfileTxt
                         params={Promise.resolve({ UserInfo: `${User?.name ?? "displayName"}` })}
-                    />
-                    <ProfileSecTxt
-                        params={Promise.resolve({ SecTxt: "Surname:" })}
-                    />
-                    <ProfileTxt
-                        params={Promise.resolve({ UserInfo: `${User?.surname ?? "displaySurname"}` })}
                     />
                     <ProfileSecTxt
                         params={Promise.resolve({ SecTxt: "Email:" })}
@@ -120,9 +127,6 @@ export default async function Profile() {
                         <Typography>
                             Počet zpracovaných ticketů: {stats.processedTickets}
                         </Typography>
-                        <Typography>
-                            Počet nahraných příloh: {stats.uploadedAttachments}
-                        </Typography>
                     </Box>
 
                     <Box
@@ -145,9 +149,7 @@ export default async function Profile() {
                         <Button>
                             Change email
                         </Button>
-                        <Button>
-                            Change phone number
-                        </Button>
+                        <AddPhoneNumber currentPhoneNumber={User?.phone_number} />
                     </Box>
                     <Button
                         variant="outlined"

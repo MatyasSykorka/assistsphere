@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
   output   = "../src/generated/prisma"
 }
 
@@ -7,42 +7,27 @@ datasource db {
   provider = "postgresql"
 }
 
-// --- BETTER-AUTH & USER MODELS ---
-
-
-/*
-
-USE DEFAULT USER MODEL AND CREATE CUSTOM ATTRIBUTES AND RELATIONS BASED ON IT
-
-*/
-
-
 model User {
   id            String    @id
   name          String
-  email         String    @unique
+  email         String    
   emailVerified Boolean   @default(false)
   image         String?
+  phone_number  String?   @db.VarChar
+  role_id       Int?      @default(3)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
-  // Přidané atributy z původního modelu users
-  username      String    @unique
-  phone_number  String?   @unique
-  role          Int?      @default(3)
-
-  // Vazby
   sessions      Session[]
   accounts      Account[]
-  
-  // Vazby na ticket systém (přejmenováno pro lepší čitelnost)
-  tickets_processed ticket[]            @relation("ticket_processing_user")
-  tickets_reported  ticket[]            @relation("ticket_reported_user")
-  attachments       ticket_attachment[]
-  
-  // Vazba na roli
-  role_ref          role?               @relation(fields: [role], references: [role_id], onDelete: NoAction, onUpdate: NoAction)
 
+  // Relace přidané z komentáře
+  role_rel                             role?               @relation("users_roleTorole", fields: [role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction)
+  ticket_ticket_processing_userToUser  ticket[]            @relation("ticket_processing_userToUser")
+  ticket_ticket_reported_userToUser    ticket[]            @relation("ticket_reported_userToUser")
+  ticket_attachments                   ticket_attachment[]
+
+  @@unique([email])
   @@map("user")
 }
 
@@ -94,97 +79,92 @@ model Verification {
   @@map("verification")
 }
 
-// --- TICKET SYSTEM MODELS ---
-
-model ticket {
-  ticket_id           Int       @id @default(autoincrement())
-  ticket_title        String    @db.VarChar(255)
-  created_time        DateTime  @default(now()) @db.Timestamptz(6)
-  updated_status      DateTime? @db.Timestamp(6)
-  solved_at           DateTime? @db.Timestamp(6)
-  
-  // Cizí klíče změněny na String kvůli vazbě na nový model User
-  reported_user       String    
-  processing_user     String?
-  
-  room                Int
-  category            Int
-  description         Int
-  priority            Int
-  status              Int       @default(1)
-  ticket_attachment   Int?
-
-  // Relace
-  user_reported       User      @relation("ticket_reported_user", fields: [reported_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  user_processing     User?     @relation("ticket_processing_user", fields: [processing_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  
-  category_ref        category  @relation(fields: [category], references: [category_id], onDelete: NoAction, onUpdate: NoAction)
-  description_ref     description @relation(fields: [description], references: [description_id], onDelete: NoAction, onUpdate: NoAction)
-  priority_ref        priority  @relation(fields: [priority], references: [priority_id], onDelete: NoAction, onUpdate: NoAction)
-  room_ref            room      @relation(fields: [room], references: [room_id], onDelete: NoAction, onUpdate: NoAction)
-  status_ref          status    @relation(fields: [status], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
-  attachment_ref      ticket_attachment? @relation("ticket_to_attachment", fields: [ticket_attachment], references: [attachment_id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model ticket_attachment {
-  attachment_id   Int      @id @default(autoincrement())
-  url             String
-  uploaded_by     String?  // Změněno na String
-  
-  tickets         ticket[] @relation("ticket_to_attachment")
-  user_uploaded   User?    @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
-}
-
-model role {
-  role_id   Int     @id @default(autoincrement())
-  role_name String  @db.VarChar(255)
-  users     User[]  // Vazba na nový model User
-}
-
-// Ostatní číselníkové modely zůstávají stejné, jen pro přehlednost:
-
 model category {
-  category_id   Int      @id @default(autoincrement())
-  category_name String   @unique @db.VarChar
-  tickets       ticket[]
+  category_id                      Int      @id @default(autoincrement())
+  category_name                    String   @unique @db.VarChar
+  ticket_ticket_categoryTocategory ticket[] @relation("ticket_categoryTocategory")
 }
 
 model description {
-  description_id Int      @id @default(autoincrement())
-  description    String
-  tickets        ticket[]
+  description_id                         Int      @id @default(autoincrement())
+  description                            String
+  ticket_ticket_descriptionTodescription ticket[] @relation("ticket_descriptionTodescription")
 }
 
 model floor {
-  floor_id   Int    @id @default(autoincrement())
-  floor_name String @db.VarChar(255)
-  rooms      room[]
+  floor_id               Int    @id @default(autoincrement())
+  floor_name             String @db.VarChar(255)
+  room_room_floorTofloor room[] @relation("room_floorTofloor")
 }
 
 model priority {
-  priority_id   Int      @id @default(autoincrement())
-  priority_type String   @unique @db.VarChar(255)
-  tickets       ticket[]
+  priority_id                      Int      @id @default(autoincrement())
+  priority_type                    String   @unique @db.VarChar(255)
+  ticket_ticket_priorityTopriority ticket[] @relation("ticket_priorityTopriority")
+}
+
+model role {
+  role_id                Int     @id @default(autoincrement())
+  role_name              String  @db.VarChar(255)
+  users_users_roleTorole User[]  @relation("users_roleTorole")
 }
 
 model room {
-  room_id   Int    @id @default(autoincrement())
-  name      String @unique @db.VarChar
-  floor     Int
-  room_type Int
-  floor_ref floor  @relation(fields: [floor], references: [floor_id], onDelete: NoAction, onUpdate: NoAction)
-  type_ref  room_type @relation(fields: [room_type], references: [room_type_id], onDelete: NoAction, onUpdate: NoAction)
-  tickets   ticket[]
+  room_id                             Int       @id @default(autoincrement())
+  name                                String    @unique @db.VarChar
+  floor                               Int
+  room_type                           Int
+  floor_room_floorTofloor             floor     @relation("room_floorTofloor", fields: [floor], references: [floor_id], onDelete: NoAction, onUpdate: NoAction)
+  room_type_room_room_typeToroom_type room_type @relation("room_room_typeToroom_type", fields: [room_type], references: [room_type_id], onDelete: NoAction, onUpdate: NoAction)
+  ticket_ticket_roomToroom            ticket[]  @relation("ticket_roomToroom")
 }
 
 model room_type {
-  room_type_id   Int    @id @default(autoincrement())
-  room_type_name String @db.VarChar(255)
-  rooms          room[]
+  room_type_id                   Int    @id @default(autoincrement())
+  room_type_name                 String @db.VarChar(255)
+  room_room_room_typeToroom_type room[] @relation("room_room_typeToroom_type")
 }
 
 model status {
-  status_id   Int      @id @default(autoincrement())
-  status_name String   @unique @db.VarChar(255)
-  tickets     ticket[]
+  status_id                    Int      @id @default(autoincrement())
+  status_name                  String   @unique @db.VarChar(255)
+  ticket_ticket_statusTostatus ticket[] @relation("ticket_statusTostatus")
+}
+
+model ticket {
+  ticket_id                                                     Int                @id @default(autoincrement())
+  reported_user                                                 String             // Změněno na String kvůli User.id
+  ticket_title                                                  String             @db.VarChar(255)
+  room                                                          Int
+  category                                                      Int
+  description                                                   Int
+  priority                                                      Int
+  status                                                        Int                @default(1)
+  created_time                                                  DateTime           @default(now()) @db.Timestamptz(6)
+  updated_status                                                DateTime?          @db.Timestamp(6)
+  solved_at                                                     DateTime?          @db.Timestamp(6)
+  ticket_attachment                                             Int?
+  processing_user                                               String?            // Změněno na String kvůli User.id
+  
+  category_ticket_categoryTocategory                            category           @relation("ticket_categoryTocategory", fields: [category], references: [category_id], onDelete: NoAction, onUpdate: NoAction)
+  description_ticket_descriptionTodescription                   description        @relation("ticket_descriptionTodescription", fields: [description], references: [description_id], onDelete: NoAction, onUpdate: NoAction)
+  priority_ticket_priorityTopriority                            priority           @relation("ticket_priorityTopriority", fields: [priority], references: [priority_id], onDelete: NoAction, onUpdate: NoAction)
+  
+  // Propojení na nový model User
+  user_reported                                                 User               @relation("ticket_reported_userToUser", fields: [reported_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  user_processing                                               User?              @relation("ticket_processing_userToUser", fields: [processing_user], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  
+  room_ticket_roomToroom                                        room               @relation("ticket_roomToroom", fields: [room], references: [room_id], onDelete: NoAction, onUpdate: NoAction)
+  status_ticket_statusTostatus                                  status             @relation("ticket_statusTostatus", fields: [status], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
+  ticket_attachment_ticket_ticket_attachmentToticket_attachment ticket_attachment? @relation("ticket_ticket_attachmentToticket_attachment", fields: [ticket_attachment], references: [attachment_id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ticket_attachment {
+  attachment_id                                      Int      @id @default(autoincrement())
+  url                                                String
+  uploaded_by                                        String?  // Změněno na String kvůli User.id
+  ticket_ticket_ticket_attachmentToticket_attachment ticket[] @relation("ticket_ticket_attachmentToticket_attachment")
+  
+  // Propojení na nový model User
+  user_uploaded                                      User?    @relation(fields: [uploaded_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
