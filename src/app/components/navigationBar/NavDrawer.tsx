@@ -17,6 +17,7 @@ import { authClient } from "@/lib/auth-client";
 const NavDrawer: React.FC = () => {
     const [open, setOpen] = useState(false);
     const router = useRouter();
+    const { data: session } = authClient.useSession();
 
     const handleLogout = async () => {
         await authClient.signOut();
@@ -70,18 +71,36 @@ const NavDrawer: React.FC = () => {
                 >
                     My tickets
                 </Button>
-                <Button
-                    component={Link}
-                    href="/tickets"
-                >
-                    All tickets
-                </Button>
-                <Button
-                    component={Link}
-                    href="/users"
-                >
-                    Users
-                </Button>
+                {/* 
+                    Role ID 
+                        1 = Admin, 
+                        2 = Manager        
+                */}
+                {session?.user && ((session.user as any).role_id === 1 || (session.user as any).role_id === 2) && (
+                    <>
+                        <Button
+                            component={Link}
+                            href="/tickets"
+                        >
+                            All tickets
+                        </Button>
+                        <Button
+                            component={Link}
+                            href="/users"
+                        >
+                            Users
+                        </Button>
+                    </>
+                )}
+                {session?.user && (session.user as any).role_id === 1 && (
+                    <Button
+                        component={Link}
+                        href="/admin_panel"
+                        color="error"
+                    >
+                        Admin Panel
+                    </Button>
+                )}
                 <Button
                     component={Link}
                     href="/profile"

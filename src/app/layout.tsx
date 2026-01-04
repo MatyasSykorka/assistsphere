@@ -35,7 +35,7 @@ export default function RootLayout({
                 `}
             >
                 <NavDrawer />
-                {children}
+                    {children}
                 <Footer />
             </body>
         </html>

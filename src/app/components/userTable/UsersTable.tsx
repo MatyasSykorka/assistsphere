@@ -20,7 +20,7 @@ import {
 } from "@mui/material";
 
 // import modal component
-import ChangeRoleModal from "../modals/changeRole/changeRoleModal";
+import ChangeRoleModal from "@/app/components/changeRole/changeRoleModal";
 
 // MUI color imports
 import { blue } from "@mui/material/colors";

@@ -9,8 +9,12 @@ import {
     Button, 
     Alert, 
     Paper,
-    Link as MuiLink
+    Link as MuiLink,
+    InputAdornment,
+    IconButton
 } from "@mui/material";
+
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 import Link from "next/link";
 import { authClient } from "@/lib/auth-client";
@@ -21,6 +25,8 @@ export default function RegisterPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -51,6 +57,17 @@ export default function RegisterPage() {
         } else {
             router.push("/my_tickets");
         }
+    };
+
+    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
+
+    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
+    };
+
+    const handleMouseUpPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+        event.preventDefault();
     };
 
     return (
@@ -123,11 +140,28 @@ export default function RegisterPage() {
                             fullWidth
                             name="password"
                             label="Password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             id="password"
                             autoComplete="new-password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                onMouseUp={handleMouseUpPassword}
+                                                edge="end"
+                                            >
+                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }
+                            }}
                         />
                         <TextField
                             margin="normal"
@@ -135,11 +169,28 @@ export default function RegisterPage() {
                             fullWidth
                             name="confirmPassword"
                             label="Confirm Password"
-                            type="password"
+                            type={showConfirmPassword ? "text" : "password"}
                             id="confirmPassword"
                             autoComplete="new-password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            slotProps={{
+                                input: {
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                aria-label="toggle password visibility"
+                                                onClick={handleClickShowConfirmPassword}
+                                                onMouseDown={handleMouseDownPassword}
+                                                onMouseUp={handleMouseUpPassword}
+                                                edge="end"
+                                            >
+                                                {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }
+                            }}
                         />
                         <Button
                             type="submit"

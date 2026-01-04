@@ -24,9 +24,9 @@ type userWithRole = {
     include: { role_users_roleTorole: true }
 };
 
-import { updateUserRole } from "@/app/components/modals/changeRole/updateUserRole";
+import { updateUserRole } from "@/app/components/changeRole/updateUserRole";
 
-type User = Prisma.usersGetPayload<userWithRole>;
+type User = Prisma.UserGetPayload<userWithRole>;
 
 interface ChangeRoleModalProps {
     open: boolean;

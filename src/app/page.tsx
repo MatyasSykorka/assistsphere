@@ -2,15 +2,13 @@
 import Link from "next/link";
 
 // MUI components
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-/*
-// Or you can make array of imports like this if needed
 import {
+    Box,
     Button,
-    Typography
+    Container,
+    Stack,
+    Typography,
 } from "@mui/material";
-*/
 
 // import custom components
 import Header from "@/app/components/header/Header";
@@ -18,42 +16,64 @@ import Header from "@/app/components/header/Header";
 // Home page component
 export default function Home() {
     return (
-        <>
-            <Header
-                title="Welcome to AssistSphere"
-                subtitle="Your solution for all assistance needs."
-            />
-            <main>
-                <Typography
-                    variant="h4"
+        <Container maxWidth="md">
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: "80vh",
+                    textAlign: "center",
+                    gap: 4,
+                }}
+            >
+                <Header
+                    title="Welcome to AssistSphere"
+                    subtitle="Your solution for all assistance needs."
+                />
+                <main>
+                    <Typography 
+                        variant="body1" 
+                        sx={{ 
+                            mb: 2 
+                        }}
+                    >
+                        AssistSphere is a modern ticketing system developed as a graduation project.
+                        It helps users easily submit report tickets and track their status.
+                    </Typography>
+                    <Typography 
+                        variant="h5" 
+                        component="p" 
+                        color="text.secondary"
+                    >
+                        To send a report ticket, please log in or register an account.
+                    </Typography>
+                </main>
+                <Stack 
+                    direction="row" 
+                    spacing={2}
                 >
-                    To sand a report ticket, please log in or register an account.
-                </Typography>
-            </main>
-            <menu>
-                <Button
-                    href="/login"
-                    component={Link}
-                    variant="contained"
-                    color="primary"
-                    sx={{
-                        marginTop: "1rem"
-                    }}
-                >
-                    Log in
-                </Button>
-                <Button
-                    href="/register"
-                    component={Link}
-                    variant="contained"
-                    color="secondary"
-                    sx={{
-                        marginTop: "1rem"
-                    }}
-                >
-                    Register
-                </Button>
-            </menu>
-        </>
+                    <Button
+                        href="/login"
+                        component={Link}
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                    >
+                        Log in
+                    </Button>
+                    <Button
+                        href="/register"
+                        component={Link}
+                        variant="outlined"
+                        color="primary"
+                        size="large"
+                    >
+                        Register
+                    </Button>
+                </Stack>
+            </Box>
+        </Container>
     );
 }

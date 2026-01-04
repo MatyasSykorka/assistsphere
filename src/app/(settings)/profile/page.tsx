@@ -7,12 +7,18 @@ import { redirect } from "next/navigation";
 import {
     Typography,
     Container,
-    Button,
-    Box
+    Box,
+    Card,
+    CardContent,
+    Stack,
+    Grid,
+    Paper,
+    Avatar,
+    Divider
 } from "@mui/material";
 
-// MUI color imports
-import { cyan } from '@mui/material/colors';
+// MUI icon imports
+import { Assignment, AssignmentTurnedIn } from "@mui/icons-material";
 
 // import prisma client
 import { prisma } from "@/lib/prisma";
@@ -20,10 +26,11 @@ import { auth } from "@/lib/auth";
 
 // import custom components
 import Header from "@/app/components/header/Header";
-import ProfileSecTxt from "@/app/components/profileTxt/ProfileSecTxt";
-import ProfileTxt from "@/app/components/profileTxt/ProfileTxt";
 
-import AddPhoneNumber from "@/app/components/modals/AddPhoneNumber";
+import AddPhoneNumber from "@/app/components/profile/AddPhoneNumber";
+import DeleteAccountButton from "@/app/components/userTable/DeleteAccountButton";
+import ChangePassword from "@/app/components/profile/ChangePassword";
+import ChangeEmail from "@/app/components/profile/ChangeEmail";
 
 // Profile settings page component
 export default async function Profile() {
@@ -58,112 +65,305 @@ export default async function Profile() {
                 title="Profile settings"
                 subtitle="Manage your profile information and preferences."
             />
-            <article>
-                <Typography
-                    variant="h3"
-                    style={{ 
-                        marginTop: "0.5rem",
-                        fontWeight: "bold" 
+            <Container 
+                maxWidth="md" 
+                sx={{ 
+                    mt: 4, 
+                    mb: 8 
+                }}
+            >
+                <Paper 
+                    elevation={0} 
+                    sx={{ 
+                        p: { 
+                            xs: 3, 
+                            md: 5 
+                        }, 
+                        borderRadius: 4, 
+                        border: '1px solid', 
+                        borderColor: 'divider' 
                     }}
                 >
-                    {User?.name ?? "displayUsername"}
-                </Typography>
-                <Container
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "1rem",
-                        marginTop: "2rem",
-                        backgroundColor: "#f5f5f5",
-                        padding: "1rem",
-                        borderRadius: "1.5rem",
-                        width: "50vw",
-                        alignSelf: "center",
-                        marginBottom: "6vh"
-                    }}
-                >
-                    {
-                        /*
-                        <ProfileSecTxt
-                            params={Promise.resolve({ SecTxt: "User Information" })}
-                        />
-                        */
-                    }
-                    <ProfileSecTxt
-                        params={Promise.resolve({ SecTxt: "Name:" })}
-                    />
-                    <ProfileTxt
-                        params={Promise.resolve({ UserInfo: `${User?.name ?? "displayName"}` })}
-                    />
-                    <ProfileSecTxt
-                        params={Promise.resolve({ SecTxt: "Email:" })}
-                    />
-                    <ProfileTxt
-                        params={Promise.resolve({ UserInfo: `${User?.email ?? "displayEmail"}` })}
-                    />
-                    <ProfileSecTxt
-                        params={Promise.resolve({ SecTxt: "Phone number:" })}
-                    />
-                    <ProfileTxt
-                        params={Promise.resolve({ UserInfo: `${User?.phone_number ?? "displayPhoneNum"}` })}
-                    />
-                    <Box
-                        sx={{
-                            marginTop: "2rem",
-                            padding: "1rem",
-                            borderRadius: "1rem",
-                            backgroundColor: `${cyan[300]}`
+                    {/* Header Section */}
+                    <Box 
+                        sx={{ 
+                            display: 'flex', 
+                            flexDirection: 'column', 
+                            alignItems: 'center', 
+                            textAlign: 'center', 
+                            mb: 4 
                         }}
                     >
-                        <Typography 
-                            variant="h5" 
-                            fontWeight="bold"
+                        <Avatar 
+                            sx={{ 
+                                width: 100, 
+                                height: 100, 
+                                mb: 2, 
+                                bgcolor: 'primary.main',
+                                fontSize: '2.5rem',
+                                fontWeight: 'bold'
+                            }}
                         >
-                            User statistics:
+                            {User?.name ? User.name.charAt(0).toUpperCase() : "U"}
+                        </Avatar>
+                        <Typography 
+                            variant="h4" 
+                            fontWeight="bold" 
+                            gutterBottom
+                        >
+                            {User?.name ?? "User"}
                         </Typography>
-                        <Typography>
-                            Počet nahlášených ticketů: {stats.reportedTickets}
-                        </Typography>
-                        <Typography>
-                            Počet zpracovaných ticketů: {stats.processedTickets}
+                        <Typography 
+                            variant="body1" 
+                            color="text.secondary"
+                        >
+                            Manage your personal details and account settings.
                         </Typography>
                     </Box>
 
-                    <Box
-                        sx={{
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "1vw",
-                            marginTop: "1rem",
-                            Width: "38vw",
-                            justifyContent: "center",
-                            alignSelf: "center",
-                            backgroundColor: "#e9e9e9ff",
-                            padding: "1rem",
-                            borderRadius: "1rem"
+                    <Divider sx={{ my: 4 }} />
+
+                    {/* Personal Information */}
+                    <Box 
+                        sx={{ 
+                            mb: 5,
                         }}
                     >
-                        <Button>
-                            Change password
-                        </Button>
-                        <Button>
-                            Change email
-                        </Button>
-                        <AddPhoneNumber currentPhoneNumber={User?.phone_number} />
+                        <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+                            Personal Information
+                        </Typography>
+                        <Grid 
+                            container 
+                            spacing={3}
+                            sx={{ 
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Box 
+                                sx={{ 
+                                    p: 2, 
+                                    bgcolor: 'grey.50', 
+                                    borderRadius: 2 
+                                }}
+                            >
+                                <Typography 
+                                    variant="caption" 
+                                    color="text.secondary" 
+                                    display="block" 
+                                    gutterBottom
+                                >
+                                    Full Name
+                                </Typography>
+                                <Typography 
+                                    variant="body1" 
+                                    fontWeight="medium"
+                                >
+                                    {User?.name ?? "Not set"}
+                                </Typography>
+                            </Box>
+                            <Box 
+                                sx={{ 
+                                    p: 2, 
+                                    bgcolor: 'grey.50', 
+                                    borderRadius: 2 
+                                }}
+                            >
+                                <Typography 
+                                    variant="caption" 
+                                    color="text.secondary" 
+                                    display="block" 
+                                    gutterBottom
+                                >
+                                    Email Address
+                                </Typography>
+                                <Typography 
+                                    variant="body1" 
+                                    fontWeight="medium"
+                                >
+                                    {User?.email ?? "Not set"}
+                                </Typography>
+                            </Box>
+                            <Box 
+                                sx={{ 
+                                    p: 2, 
+                                    bgcolor: 'grey.50', 
+                                    borderRadius: 2 
+                                }}
+                            >
+                                <Typography 
+                                    variant="caption" 
+                                    color="text.secondary" 
+                                    display="block" 
+                                    gutterBottom
+                                >
+                                    Phone Number
+                                </Typography>
+                                <Typography 
+                                    variant="body1" 
+                                    fontWeight="medium"
+                                >
+                                    {User?.phone_number ?? "Not provided"}
+                                </Typography>
+                            </Box>
+                        </Grid>
                     </Box>
-                    <Button
-                        variant="outlined"
-                        color="error"
-                        sx={{
-                            width: "15vw",
-                            alignSelf: "center",
-                            marginTop: "0.5rem",
+
+                    {/* Statistics Section */}
+                    <Box 
+                        sx={{ 
+                            mb: 5 
                         }}
                     >
-                        Delete account
-                    </Button>
-                </Container>
-            </article>
+                        <Typography 
+                            variant="h6" 
+                            fontWeight="bold" 
+                            gutterBottom 
+                            sx={{ 
+                                mb: 3 
+                            }}
+                        >
+                            Activity Overview
+                        </Typography>
+                        <Grid 
+                            container 
+                            spacing={2}
+                            sx={{
+                                justifyContent: 'center'
+                            }}
+                        >
+                            <Card 
+                                elevation={0} 
+                                sx={{ 
+                                    bgcolor: '#e3f2fd', 
+                                    borderRadius: 3, 
+                                    height: '100%' 
+                                }}
+                            >
+                                <CardContent>
+                                    <Stack 
+                                        direction="row" 
+                                        alignItems="center" 
+                                        spacing={2}
+                                    >
+                                        <Box 
+                                            sx={{ 
+                                                p: 1.5, 
+                                                bgcolor: 'white', 
+                                                borderRadius: '50%', 
+                                                display: 'flex' 
+                                            }}
+                                        >
+                                            <Assignment color="primary" />
+                                        </Box>
+                                        <Box>
+                                            <Typography 
+                                                variant="h4" 
+                                                fontWeight="bold" 
+                                                color="primary.main"
+                                            >
+                                                {stats.reportedTickets}
+                                            </Typography>
+                                            <Typography 
+                                                variant="body2" 
+                                                color="text.secondary" 
+                                                fontWeight="medium"
+                                            >
+                                                Reported Tickets
+                                            </Typography>
+                                        </Box>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                            <Card 
+                                elevation={0} 
+                                sx={{ 
+                                    bgcolor: '#e8f5e9', 
+                                    borderRadius: 3, 
+                                    height: '100%' 
+                                }}
+                            >
+                                <CardContent>
+                                    <Stack 
+                                        direction="row" 
+                                        alignItems="center" 
+                                        spacing={2}
+                                    >
+                                        <Box 
+                                            sx={{ 
+                                                p: 1.5, 
+                                                bgcolor: 'white', 
+                                                borderRadius: '50%', 
+                                                display: 'flex' 
+                                            }}
+                                        >
+                                            <AssignmentTurnedIn color="success" />
+                                        </Box>
+                                        <Box>
+                                            <Typography 
+                                                variant="h4" 
+                                                fontWeight="bold" 
+                                                color="success.main"
+                                            >
+                                                {stats.processedTickets}
+                                            </Typography>
+                                            <Typography 
+                                                variant="body2" 
+                                                color="text.secondary" 
+                                                fontWeight="medium"
+                                            >
+                                                Processed Tickets
+                                            </Typography>
+                                        </Box>
+                                    </Stack>
+                                </CardContent>
+                            </Card>
+                        </Grid>
+                    </Box>
+
+                    <Divider sx={{ my: 4 }} />
+
+                    {/* Security & Actions */}
+                    <Box>
+                        <Typography 
+                            variant="h6" 
+                            fontWeight="bold" 
+                            gutterBottom 
+                            sx={{ 
+                                mb: 3 
+                            }}
+                        >
+                            Security & Actions
+                        </Typography>
+                        <Stack 
+                            spacing={2}
+                        >
+                            <Box 
+                                sx={{ 
+                                    display: 'flex', 
+                                    flexDirection: { 
+                                        xs: 'column', 
+                                        sm: 'row' 
+                                    }, 
+                                    gap: 2,
+                                    justifyContent: 'center' 
+                                }}
+                            >
+                                <ChangePassword />
+                                <ChangeEmail currentEmail={User?.email} />
+                                <AddPhoneNumber currentPhoneNumber={User?.phone_number} />
+                            </Box>
+                            
+                            <Box 
+                                sx={{ 
+                                    pt: 2 
+                                }}
+                            >
+                                <DeleteAccountButton />
+                            </Box>
+                        </Stack>
+                    </Box>
+                </Paper>
+            </Container>
         </>
     );
 }

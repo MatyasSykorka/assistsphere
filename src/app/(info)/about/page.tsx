@@ -17,7 +17,7 @@ export default function About() {
             />
             <article
                 style={{
-                    width: "50vw",
+                    width: "35vw",
 
                 }}
             >
@@ -29,7 +29,7 @@ export default function About() {
                 <Typography
                     variant="body1"
                 >
-                    The project is built using Next.js libraries and Material-UI, ensuring a responsive and accessible user experience across different devices. It incorporates features such as user authentication, real-time notifications, and an intuitive interface to facilitate seamless interactions.
+                    The project is built using Next.js libraries and Material-UI, ensuring a responsive and accessible user experience across different devices. It incorporates features such as user authentication and an intuitive interface to facilitate seamless interactions.
                 </Typography>
                 <Typography
                     variant="body1"

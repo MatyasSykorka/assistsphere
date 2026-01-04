@@ -6,7 +6,7 @@ export async function updateUserRole(
     userId: number, 
     roleId: number
 ) {
-    await prisma.users.update({
+    await prisma.user.update({
         where: { user_id: userId },
         data: { role_id: roleId },
     });
