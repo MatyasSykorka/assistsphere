@@ -6,23 +6,12 @@ import { prisma } from "@/lib/prisma";
 import Typography from "@mui/material/Typography";
 import { 
     Container, 
-    Card, 
-    CardContent, 
-    CardActions, 
-    Button 
+    Grid
 } from "@mui/material";
-
-// MUI color imports
-import { 
-    deepOrange, 
-    blue,
-    green,
-    red,
-    grey
-} from "@mui/material/colors";
 
 // import custom components
 import Header from "@/app/components/header/Header";
+import TicketCard from "../components/ticketTable/TicketCard";
 
 // Tickets page component
 export default async function Tickets() {
@@ -31,28 +20,33 @@ export default async function Tickets() {
             description_ticket_descriptionTodescription: true,
             room_ticket_roomToroom: true,
             status_ticket_statusTostatus: true,
-            users_ticket_reported_userTousers: true,
-            users_ticket_processing_userTousers: true
+            priority_ticket_priorityTopriority: true,
+            category_ticket_categoryTocategory: true,
+            user_reported: true,
+            user_processing: true
+        },
+        orderBy: {
+            created_time: 'desc'
         }
     });
 
-    function getStatusColor(
-        statusName: string | undefined
-    ) {
-        switch (statusName) {
-            case "Open":
-                return `${deepOrange[400]}`;
-            case "In Progress":
-                return `${blue[500]}`;
-            case "Resolved":
-                return `${green[700]}`;
-            case "Rejected":
-                return `${red[500]}`;
-            default:
-                return `${grey[500]}`;
-        }
-    }
+    // Sort tickets: move Resolved and Rejected to the end of the list
+    tickets.sort((a, b) => {
+        const statusA = a.status_ticket_statusTostatus?.status_name;
+        const statusB = b.status_ticket_statusTostatus?.status_name;
+        const isEndA = statusA === "Resolved" || statusA === "Rejected";
+        const isEndB = statusB === "Resolved" || statusB === "Rejected";
 
+        if (isEndA && !isEndB) return 1;
+        if (!isEndA && isEndB) return -1;
+        return 0;
+    });
+
+    // In a real application, you would get the current user from the session
+    const user = await prisma.user.findFirst();
+    const currentUserId = user?.id || "";
+
+    const statuses = await prisma.status.findMany();
 
     return (
         <>
@@ -64,115 +58,37 @@ export default async function Tickets() {
                 <Typography
                     variant="h4"
                 >
-                    Here you can view and manage all support tickets submitted by users.
+                    Here you can view and manage all reported tickets submitted by users.
                 </Typography>
             </article>
             <Container
                 sx={{  
-                    gap: 2, 
                     mt: 4,
                     mb: 4,
                 }}
             >
-                {tickets.map((ticket) => (
-                    <Card 
-                        key={ ticket.ticket_id } 
-                        sx={{ 
-                            mb: 2, 
-                            p: 2, 
-                            border: '1px solid #ccc', 
-                            borderRadius: '8px',
-                        }}
-                    >
-                        <CardContent>
-                            <Typography 
-                                variant="body1"
-                            >
-                                Ticket number:&nbsp; 
-                                <b>
-                                    { ticket.ticket_id }
-                                </b>
-                            </Typography>
-                            <Typography 
-                                variant="h5"
-                            >
-                                <b>
-                                    { ticket.ticket_title }
-                                </b>
-                            </Typography>
-                            <Typography 
-                                variant="body2"
-                            >
-                                Status:&nbsp;
-                                <Typography
-                                    component="span"
-                                    fontWeight="bold"
-                                    variant="body2"
-                                    sx={{ 
-                                    color: getStatusColor(
-                                        ticket.status_ticket_statusTostatus?.status_name
-                                    )
-                                }}
-                                >
-                                    { ticket.status_ticket_statusTostatus?.status_name ?? "Unknown" }
-                                </Typography>
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                            >
-                                Room:&nbsp;
-                                <b>
-                                    { ticket.room_ticket_roomToroom?.name }
-                                </b>
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                            >
-                                Created by:&nbsp;
-                                <b>
-                                    { ticket.users_ticket_reported_userTousers?.name }
-                                    &nbsp;
-                                    { ticket.users_ticket_reported_userTousers?.surname }
-                                </b>
-                            </Typography>
-                            <Typography
-                                variant="body2"
-                            >
-                                Processing user:&nbsp;
-                                <b>
-                                    { 
-                                    ticket.users_ticket_processing_userTousers
-                                        ? `${ ticket.users_ticket_processing_userTousers.name } ${ ticket.users_ticket_processing_userTousers.surname }` : "nobody" }
-                                </b>
-                            </Typography>
-                            {
-                                /*
-                                // make description under a show more button
-                                    <Typography 
-                                        key={ ticket.ticket_id } 
-                                        variant="body2"
-                                    >
-                                        Ticket description:&nbsp;
-                                        <span>
-                                            { ticket.description_ticket_descriptionTodescription?.description }
-                                        </span>
-                                    </Typography>
-                                */
-                            }
-                        </CardContent>
-                        <CardActions>
-                            <Button
-                                size="small"
-                                variant="outlined"
-                                sx={{
-                                    marginTop: "auto"
-                                }}
-                            >
-                                Show more
-                            </Button>
-                        </CardActions>
-                    </Card>
-                ))}
+                <Grid 
+                    container 
+                    spacing={3}
+                >
+                    {tickets.map((ticket) => (
+                        <Grid 
+                            item 
+                            sx={{ width: 350 }}
+                            key={ticket.ticket_id}
+                        >
+                            <TicketCard 
+                                ticket={{
+                                    ...ticket,
+                                    created_time: ticket.created_time.toISOString()
+                                }} 
+                                currentUserId={currentUserId}
+                                statuses={statuses}
+                            />
+                            
+                        </Grid>
+                    ))}
+                </Grid>
             </Container>
         </>
     );

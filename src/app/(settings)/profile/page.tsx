@@ -50,6 +50,7 @@ export default async function Profile() {
             ticket_ticket_reported_userToUser: true,
             ticket_ticket_processing_userToUser: true,
             ticket_attachments: true,
+            role_rel: true,
         }
     });
 
@@ -203,6 +204,28 @@ export default async function Profile() {
                                     fontWeight="medium"
                                 >
                                     {User?.phone_number ?? "Not provided"}
+                                </Typography>
+                            </Box>
+                            <Box 
+                                sx={{ 
+                                    p: 2, 
+                                    bgcolor: 'grey.50', 
+                                    borderRadius: 2 
+                                }}
+                            >
+                                <Typography 
+                                    variant="caption" 
+                                    color="text.secondary" 
+                                    display="block" 
+                                    gutterBottom
+                                >
+                                    Role
+                                </Typography>
+                                <Typography 
+                                    variant="body1" 
+                                    fontWeight="medium"
+                                >
+                                    {User?.role_rel?.role_name ?? "User"}
                                 </Typography>
                             </Box>
                         </Grid>

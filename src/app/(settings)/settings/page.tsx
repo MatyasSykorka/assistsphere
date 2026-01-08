@@ -31,7 +31,11 @@ export default function Settings() {
                         /* Style */
                     }}
                 >
-                    {/* Settings options will go here in the future */}
+                    {/* 
+                        Settings options will go here in the future 
+                        Example settings options:
+                            - Dark Mode Toggle
+                    */}
                 </Container>
             </article>
         </>
