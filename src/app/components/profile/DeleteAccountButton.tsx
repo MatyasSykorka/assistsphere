@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@mui/material";
+import { 
+    Button, 
+    Dialog, 
+    DialogActions, 
+    DialogContent, 
+    DialogContentText, 
+    DialogTitle 
+} from "@mui/material";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { deleteAccount } from "@/app/(settings)/profile/profile-delete";
+import { deleteAccount } from "@/app/(user)/profile/profile-delete";
 
-export default function DeleteAccountButton() {
+export default function DeleteAccountButton({ isAdmin }: { isAdmin: boolean }) {
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
@@ -31,6 +38,7 @@ export default function DeleteAccountButton() {
                 variant="outlined"
                 color="error"
                 onClick={() => setOpen(true)}
+                disabled={isAdmin}
                 sx={{
                     width: "15vw",
                     alignSelf: "center",
@@ -41,7 +49,9 @@ export default function DeleteAccountButton() {
             </Button>
             <Dialog
                 open={open}
-                onClose={() => setOpen(false)}
+                onClose={
+                    () => setOpen(false)
+                }
             >
                 <DialogTitle>Delete Account</DialogTitle>
                 <DialogContent>
@@ -50,8 +60,20 @@ export default function DeleteAccountButton() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={() => setOpen(false)} disabled={loading}>Cancel</Button>
-                    <Button onClick={handleDelete} color="error" autoFocus disabled={loading}>
+                    <Button 
+                        onClick={
+                            () => setOpen(false)
+                        } 
+                        disabled={loading}
+                    >
+                        Cancel
+                    </Button>
+                    <Button 
+                        onClick={handleDelete} 
+                        color="error" 
+                        autoFocus 
+                        disabled={loading}
+                    >
                         {loading ? "Deleting..." : "Delete"}
                     </Button>
                 </DialogActions>

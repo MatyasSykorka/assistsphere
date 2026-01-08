@@ -28,7 +28,7 @@ import { auth } from "@/lib/auth";
 import Header from "@/app/components/header/Header";
 
 import AddPhoneNumber from "@/app/components/profile/AddPhoneNumber";
-import DeleteAccountButton from "@/app/components/userTable/DeleteAccountButton";
+import DeleteAccountButton from "@/app/components/profile/DeleteAccountButton";
 import ChangePassword from "@/app/components/profile/ChangePassword";
 import ChangeEmail from "@/app/components/profile/ChangeEmail";
 
@@ -381,7 +381,9 @@ export default async function Profile() {
                                     pt: 2 
                                 }}
                             >
-                                <DeleteAccountButton />
+                                <DeleteAccountButton 
+                                    isAdmin={User?.role_id === 1} 
+                                />
                             </Box>
                         </Stack>
                     </Box>

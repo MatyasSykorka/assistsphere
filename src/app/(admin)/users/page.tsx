@@ -9,7 +9,7 @@ import {
 
 // import custom components
 import Header from "@/app/components/header/Header";
-import UsersTable from "../../components/userTable/UsersTable";
+import UsersTable from "../../components/usersTable/UsersTable";
 
 // import prisma client
 import { prisma } from "@/lib/prisma";

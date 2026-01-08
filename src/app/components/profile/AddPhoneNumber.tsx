@@ -11,7 +11,7 @@ import {
     TextField,
 } from "@mui/material";
 
-import { updatePhoneNumber } from "@/app/(settings)/profile/profile-change-phone-num";
+import { updatePhoneNumber } from "@/app/(user)/profile/profile-change-phone-num";
 
 interface AddPhoneNumberProps {
     currentPhoneNumber?: string | null;
