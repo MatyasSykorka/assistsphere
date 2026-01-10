@@ -19,8 +19,9 @@ import {
     Container
 } from "@mui/material";
 
-// import modal component
-import ChangeRoleModal from "@/app/components/changeRole/changeRoleModal";
+// import modal and action components
+import ChangeRoleModal from "@/app/components/(userTable)/changeRole/changeRoleModal";
+import DeleteUserModal from "@/app/components/(userTable)/deleteUser/deleteUserModal";
 
 // MUI color imports
 import { blue } from "@mui/material/colors";
@@ -33,10 +34,10 @@ import { Prisma } from '@prisma/client';
 
 // This creates a type based on the Prisma query from the parent page, ensuring type safety.
 type userWithRole = {
-    include: { role_users_roleTorole: true }
+    include: { role_rel: true }
 };
 
-type User = Prisma.usersGetPayload<userWithRole>;
+type User = Prisma.UserGetPayload<userWithRole>;
 
 interface Role {
     role_id: number;
@@ -50,13 +51,17 @@ interface UsersTableProps {
 
 type Order = 'asc' | 'desc';
 
-function descendingComparator(a: User, b: User, orderBy: keyof User) {
+function descendingComparator(
+    a: User, 
+    b: User, 
+    orderBy: keyof User
+) {
     let bValue: string | number | undefined = b[orderBy] as string | number | undefined;
     let aValue: string | number | undefined = a[orderBy] as string | number | undefined;
 
-    if (orderBy === 'role_users_roleTorole') {
-        bValue = b.role_users_roleTorole?.role_name;
-        aValue = a.role_users_roleTorole?.role_name;
+    if (orderBy === 'role_rel') {
+        bValue = b.role_rel?.role_name;
+        aValue = a.role_rel?.role_name;
     }
 
     // Treat null/undefined values consistently
@@ -75,7 +80,10 @@ function descendingComparator(a: User, b: User, orderBy: keyof User) {
 function getComparator(
     order: Order,
     orderBy: keyof User,
-): (a: User, b: User) => number {
+): (
+    a: User, 
+    b: User
+) => number {
     return order === 'desc'
         ? (a, b) => descendingComparator(a, b, orderBy)
         : (a, b) => -descendingComparator(a, b, orderBy);
@@ -104,20 +112,22 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-    { id: 'user_id',                label: 'ID'         },
-    { id: 'name',                   label: 'Name'       },
-    { id: 'surname',                label: 'Surname'    },
-    { id: 'username',               label: 'Username'   },
-    { id: 'email',                  label: 'Email'      },
-    { id: 'role_users_roleTorole',  label: 'Role'       },
-    { id: 'actions',                label: 'Actions'    },
+    { id: 'id',         label: 'ID'      },
+    { id: 'name',       label: 'Name'    },
+    { id: 'email',      label: 'Email'   },
+    { id: 'role_rel',   label: 'Role'    },
+    { id: 'actions',    label: 'Actions' },
 ];
 
-export default function UsersTable({ users, roles }: UsersTableProps) {
+export default function UsersTable(
+    { users, roles }: UsersTableProps
+) {
     const [order, setOrder] = useState<Order>('asc');
-    const [orderBy, setOrderBy] = useState<keyof User>('user_id');
+    const [orderBy, setOrderBy] = useState<keyof User>('id');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [userToDelete, setUserToDelete] = useState<User | null>(null);
 
     const handleRequestSort = (property: keyof User) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -141,6 +151,16 @@ export default function UsersTable({ users, roles }: UsersTableProps) {
     const handleCloseChangeRoleModal = () => {
         setIsModalOpen(false);
         setSelectedUser(null);
+    };
+
+    const handleOpenDeleteModal = (user: User) => {
+        setUserToDelete(user);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleCloseDeleteModal = () => {
+        setIsDeleteModalOpen(false);
+        setUserToDelete(null);
     };
 
     return (
@@ -199,23 +219,24 @@ export default function UsersTable({ users, roles }: UsersTableProps) {
                     <TableBody>
                         {sortedUsers.map((user) => (
                             <TableRow 
-                                key={user.user_id} 
+                                key={user.id} 
                                 hover
                             >
-                                <TableCell>{user.user_id}</TableCell>
+                                <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.name}</TableCell>
-                                <TableCell>{user.surname}</TableCell>
-                                <TableCell>{user.username}</TableCell>
                                 <TableCell>{user.email}</TableCell>
-                                <TableCell>{user.role_users_roleTorole?.role_name}</TableCell>
+                                <TableCell>{user.role_rel?.role_name}</TableCell>
                                 <TableCell>
                                     {
-                                        user.role_users_roleTorole?.role_id !== 1 && (
+                                        user.role_rel?.role_id !== 1 && (
                                             <>
                                                 <Button 
                                                     variant="contained" 
                                                     color="error" 
                                                     size="small"
+                                                    onClick={
+                                                        () => handleOpenDeleteModal(user)
+                                                    }
                                                 >
                                                     Delete
                                                 </Button>
@@ -224,7 +245,9 @@ export default function UsersTable({ users, roles }: UsersTableProps) {
                                                     color="primary" 
                                                     size="small" 
                                                     sx={{ ml: 1 }}
-                                                    onClick={() => handleOpenChangeRoleModal(user)}
+                                                    onClick={
+                                                        () => handleOpenChangeRoleModal(user)
+                                                    }
                                                 >
                                                     Change role
                                                 </Button>
@@ -242,6 +265,11 @@ export default function UsersTable({ users, roles }: UsersTableProps) {
                 onClose={handleCloseChangeRoleModal}
                 user={selectedUser}
                 roles={roles}
+            />
+            <DeleteUserModal
+                open={isDeleteModalOpen}
+                onClose={handleCloseDeleteModal}
+                user={userToDelete}
             />
         </Container>
     );

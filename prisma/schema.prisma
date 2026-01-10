@@ -133,7 +133,7 @@ model status {
 
 model ticket {
   ticket_id                                                     Int                @id @default(autoincrement())
-  reported_user                                                 String             // Změněno na String kvůli User.id
+  reported_user                                                 String             
   ticket_title                                                  String             @db.VarChar(255)
   room                                                          Int
   category                                                      Int
@@ -144,7 +144,7 @@ model ticket {
   updated_status                                                DateTime?          @db.Timestamp(6)
   solved_at                                                     DateTime?          @db.Timestamp(6)
   ticket_attachment                                             Int?
-  processing_user                                               String?            // Změněno na String kvůli User.id
+  processing_user                                               String?            
   
   category_ticket_categoryTocategory                            category           @relation("ticket_categoryTocategory", fields: [category], references: [category_id], onDelete: NoAction, onUpdate: NoAction)
   description_ticket_descriptionTodescription                   description        @relation("ticket_descriptionTodescription", fields: [description], references: [description_id], onDelete: NoAction, onUpdate: NoAction)

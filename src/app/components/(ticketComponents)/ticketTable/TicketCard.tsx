@@ -32,7 +32,17 @@ import {
 import AssignTicketButton from "./AssignTicketButton";
 import { updateTicketStatus } from "@/app/tickets/actions";
 
-export default function TicketCard({ ticket, currentUserId, statuses }: { ticket: any, currentUserId: string, statuses: any[] }) {
+export default function TicketCard({ 
+    ticket, 
+    currentUserId, 
+    currentUserRole, 
+    statuses 
+}: { 
+    ticket: any, 
+    currentUserId: string, 
+    currentUserRole: number, 
+    statuses: any[] 
+}) {
     const [open, setOpen] = useState(false);
     const [statusOpen, setStatusOpen] = useState(false);
 
@@ -228,7 +238,10 @@ export default function TicketCard({ ticket, currentUserId, statuses }: { ticket
                             <Typography 
                                 variant="body2"
                             >
-                                {ticket.user_processing ? ticket.user_processing.name : "Unassigned"}
+                                {ticket.user_processing ? 
+                                    ticket.user_processing.name : 
+                                    "Unassigned"
+                                }
                             </Typography>
                         </Box>
                     </Stack>
@@ -263,11 +276,11 @@ export default function TicketCard({ ticket, currentUserId, statuses }: { ticket
                                 Change Status
                             </Button>
                         )}
-                        {(!ticket.processing_user || ticket.processing_user === currentUserId) && (
+                        {(currentUserRole === 1 || currentUserRole === 2) && (
                             <AssignTicketButton 
                                 ticketId={ticket.ticket_id} 
-                                currentUserId={currentUserId} 
-                                isAssigned={ticket.processing_user === currentUserId}
+                                isAssignedToMe={ticket.processing_user === currentUserId}
+                                isAssignedToOther={!!ticket.processing_user && ticket.processing_user !== currentUserId}
                             />
                         )}
                     </Stack>

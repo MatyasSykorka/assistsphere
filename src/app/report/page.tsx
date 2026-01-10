@@ -4,7 +4,7 @@
 // import custom components
 // page.tsx
 import Header from "@/app/components/header/Header";
-import TicketForm from "@/app/components/ticketForm/TicketForm";
+import TicketForm from "@/app/components/(ticketComponents)/ticketForm/TicketForm";
 // Importujte singleton instanci, ne třídu
 import { prisma } from "@/lib/prisma"; 
 

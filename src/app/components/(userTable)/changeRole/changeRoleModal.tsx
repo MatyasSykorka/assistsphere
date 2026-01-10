@@ -21,10 +21,10 @@ import { SelectChangeEvent } from "@mui/material/Select";
 import { Prisma } from '@prisma/client';
 
 type userWithRole = {
-    include: { role_users_roleTorole: true }
+    include: { role_rel: true }
 };
 
-import { updateUserRole } from "@/app/components/changeRole/updateUserRole";
+import { updateUserRole } from "@/app/components/(userTable)/changeRole/updateUserRole";
 
 type User = Prisma.UserGetPayload<userWithRole>;
 
@@ -48,8 +48,8 @@ export default function ChangeRoleModal({
     const router = useRouter();
 
     React.useEffect(() => {
-        if (user?.role_users_roleTorole?.role_id) {
-            setRole(user.role_users_roleTorole.role_id);
+        if (user?.role_rel?.role_id) {
+            setRole(user.role_rel.role_id);
         } else {
             setRole('');
         }
@@ -65,7 +65,7 @@ export default function ChangeRoleModal({
 
     const handleConfirm = async () => {
         if (user && role) {
-            await updateUserRole(user.user_id, Number(role));
+            await updateUserRole(user.id, Number(role));
             router.refresh();
             onClose();
         }
@@ -78,10 +78,10 @@ export default function ChangeRoleModal({
             fullWidth
             maxWidth="sm"
         >
-            <DialogTitle>Change role for {user.name} {user.surname}</DialogTitle>
+            <DialogTitle>Change role for {user.name}</DialogTitle>
             <DialogContent>
                 <Typography>
-                    Current role: {user.role_users_roleTorole?.role_name ?? "N/A"}
+                    Current role: {user.role_rel?.role_name ?? "N/A"}
                 </Typography>
                 <FormControl fullWidth sx={{ mt: 2 }}>
                     <InputLabel 

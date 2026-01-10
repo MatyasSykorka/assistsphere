@@ -1,6 +1,10 @@
 // Next.js components
 // import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
 // MUI components
 import Typography from "@mui/material/Typography";
@@ -11,11 +15,29 @@ import {
 
 // import custom components
 import Header from "@/app/components/header/Header";
-import TicketCard from "../components/ticketTable/TicketCard";
+import TicketCard from "../components/(ticketComponents)/ticketTable/TicketCard";
+import TicketFilter from "../components/(ticketComponents)/ticketFilter/ticketFilter";
 
 // Tickets page component
-export default async function Tickets() {
+export default async function Tickets(props: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+    const searchParams = await props.searchParams;
+
+    const priorityFilter = searchParams?.priority ? Number(searchParams.priority) : undefined;
+    const categoryFilter = searchParams?.category ? Number(searchParams.category) : undefined;
+    const statusFilter = searchParams?.status ? Number(searchParams.status) : undefined;
+    const userFilter = typeof searchParams?.user === 'string' ? searchParams.user : undefined;
+
+    const whereClause: Prisma.ticketWhereInput = {
+        ...(priorityFilter && { priority: priorityFilter }),
+        ...(categoryFilter && { category: categoryFilter }),
+        ...(statusFilter && { status: statusFilter }),
+        ...(userFilter && { reported_user: userFilter }),
+    };
+
     const tickets = await prisma.ticket.findMany({
+        where: whereClause,
         include: {
             description_ticket_descriptionTodescription: true,
             room_ticket_roomToroom: true,
@@ -42,11 +64,35 @@ export default async function Tickets() {
         return 0;
     });
 
-    // In a real application, you would get the current user from the session
-    const user = await prisma.user.findFirst();
-    const currentUserId = user?.id || "";
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
 
-    const statuses = await prisma.status.findMany();
+    if (!session || !session.user) {
+        redirect("/login");
+    }
+
+    const currentUserId = session.user.id;
+    let currentUserRole = (session.user as any).role_id as number | undefined;
+
+    if (typeof currentUserRole !== "number") {
+        const user = await prisma.user.findUnique({
+            where: { id: currentUserId },
+            select: { role_id: true },
+        });
+        currentUserRole = user?.role_id ?? 3;
+    }
+
+    const priorities = await prisma.priority.findMany();
+    const categories = await prisma.category.findMany();
+    const allStatuses = await prisma.status.findMany();
+    const users = await prisma.user.findMany({
+        select: { 
+            id: true, 
+            name: true, 
+            email: true 
+        }
+    });
 
     return (
         <>
@@ -67,6 +113,12 @@ export default async function Tickets() {
                     mb: 4,
                 }}
             >
+                <TicketFilter 
+                    priorities={priorities}
+                    categories={categories}
+                    statuses={allStatuses}
+                    users={users}
+                />
                 <Grid 
                     container 
                     spacing={3}
@@ -83,7 +135,8 @@ export default async function Tickets() {
                                     created_time: ticket.created_time.toISOString()
                                 }} 
                                 currentUserId={currentUserId}
-                                statuses={statuses}
+                                currentUserRole={currentUserRole}
+                                statuses={allStatuses}
                             />
                             
                         </Grid>

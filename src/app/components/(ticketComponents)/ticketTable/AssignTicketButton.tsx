@@ -3,19 +3,22 @@
 import { useState } from 'react';
 import { Button, Snackbar } from '@mui/material';
 import Alert from '@mui/material/Alert';
-import { assignTicket, unassignTicket } from '@/app/tickets/actions';
+import { 
+    assignTicket, 
+    unassignTicket 
+} from '@/app/tickets/actions';
 
 interface AssignTicketButtonProps {
     ticketId: number;
-    currentUserId: string;
-    isAssigned: boolean;
+    isAssignedToMe: boolean;
+    isAssignedToOther: boolean;
 }
 
 export default function AssignTicketButton(
     { 
         ticketId, 
-        currentUserId, 
-        isAssigned 
+        isAssignedToMe,
+        isAssignedToOther,
     }: AssignTicketButtonProps
 ) {
     const [loading, setLoading] = useState(false);
@@ -24,19 +27,21 @@ export default function AssignTicketButton(
     const handleAssign = async () => {
         setLoading(true);
         try {
-            const result = isAssigned 
+            const result = isAssignedToMe 
                 ? await unassignTicket(ticketId)
-                : await assignTicket(ticketId, currentUserId);
+                : await assignTicket(ticketId);
 
             if (!result.success) {
                 setError(
                     result.error || (
-                        isAssigned ? 'Failed to unassign ticket' : 'Failed to assign ticket'
+                        isAssignedToMe ? 
+                            "Failed to unassign ticket" : 
+                            "Failed to assign ticket"
                     )
                 );
             }
         } 
-        catch (err) {
+        catch {
             setError('An unexpected error occurred');
         } 
         finally {
@@ -48,12 +53,22 @@ export default function AssignTicketButton(
         <>
             <Button 
                 variant="contained" 
-                color={isAssigned ? "error" : "primary"}
+                color={isAssignedToMe ? "error" : "primary"}
                 fullWidth
                 onClick={handleAssign}
-                disabled={loading}
+                disabled={loading || (!isAssignedToMe && isAssignedToOther)}
             >
-                {loading ? (isAssigned ? 'Unassigning...' : 'Assigning...') : (isAssigned ? 'Unassign' : 'Assign to Me')}
+                {loading ? 
+                    (
+                        isAssignedToMe ? 
+                            "Unassigning..." : 
+                            "Assigning..."
+                    ) : (
+                        isAssignedToMe ? 
+                            "Unassign" : 
+                            (isAssignedToOther ? "Assigned" : "Assign to Me")
+                    )
+                }
             </Button>
             {error && (
                 <Snackbar 

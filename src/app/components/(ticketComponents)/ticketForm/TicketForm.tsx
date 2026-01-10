@@ -14,7 +14,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { createTicket } from "@/app/components/ticketForm/ticketAction";
+import { createTicket } from "@/app/components/(ticketComponents)/ticketForm/ticketAction";
 
 type Room = {
     room_id: number;

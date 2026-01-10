@@ -8,7 +8,9 @@ type HeaderProps = {
 };
 
 // Header component
-export default function Header( { title, subtitle } : HeaderProps ) {
+export default function Header( 
+    { title, subtitle } : HeaderProps 
+) {
     return (
         <header>
             <Typography 

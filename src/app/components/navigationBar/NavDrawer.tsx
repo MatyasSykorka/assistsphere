@@ -28,7 +28,9 @@ const NavDrawer: React.FC = () => {
         <>
             <Button 
                 variant="outlined"
-                onClick={ () => setOpen(true) }
+                onClick={ 
+                    () => setOpen(true) 
+                }
                 sx={{
                     position: "fixed",
                     top: "1rem",
@@ -40,7 +42,9 @@ const NavDrawer: React.FC = () => {
             <Drawer 
                 anchor="right" 
                 open={open} 
-                onClose={() => setOpen(false)}
+                onClose={
+                    () => setOpen(false)
+                }
                 sx={{
                     "& .MuiDrawer-paper": {
                         display: "flex",
@@ -74,23 +78,23 @@ const NavDrawer: React.FC = () => {
                 {/* 
                     Role ID 
                         1 = Admin, 
-                        2 = Manager        
+                        2 = Manager
                 */}
-                {session?.user && ((session.user as any).role_id === 1 || (session.user as any).role_id === 2) && (
-                    <>
-                        <Button
-                            component={Link}
-                            href="/tickets"
-                        >
-                            All tickets
-                        </Button>
-                        <Button
-                            component={Link}
-                            href="/users"
-                        >
-                            Users
-                        </Button>
-                    </>
+                {session?.user && ( (session.user as any).role_id === 1 || (session.user as any).role_id === 2 ) && (
+                    <Button
+                        component={Link}
+                        href="/tickets"
+                    >
+                        All tickets
+                    </Button>
+                )}
+                {session?.user && (session.user as any).role_id === 1 && (
+                    <Button
+                        component={Link}
+                        href="/users"
+                    >
+                        Users
+                    </Button>
                 )}
                 {session?.user && (session.user as any).role_id === 1 && (
                     <Button
@@ -131,14 +135,18 @@ const NavDrawer: React.FC = () => {
                 </Button>
                 <Button
                     color="error"
-                    onClick={handleLogout}
+                    onClick={
+                        handleLogout
+                    }
                 >
                     Log out
                 </Button>
                 <Button
                     color="secondary"
                     variant="contained"
-                    onClick={() => setOpen(false)}
+                    onClick={
+                        () => setOpen(false)
+                    }
                 >
                     Close
                 </Button>

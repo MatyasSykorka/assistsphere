@@ -3,11 +3,11 @@
 import { prisma } from "@/lib/prisma";
 
 export async function updateUserRole(
-    userId: number, 
+    userId: string, 
     roleId: number
 ) {
     await prisma.user.update({
-        where: { user_id: userId },
+        where: { id: userId },
         data: { role_id: roleId },
     });
 }

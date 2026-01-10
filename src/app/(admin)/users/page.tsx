@@ -9,7 +9,7 @@ import {
 
 // import custom components
 import Header from "@/app/components/header/Header";
-import UsersTable from "../../components/usersTable/UsersTable";
+import UsersTable from "../../components/(userTable)/usersTable/UsersTable";
 
 // import prisma client
 import { prisma } from "@/lib/prisma";
@@ -17,9 +17,9 @@ import { prisma } from "@/lib/prisma";
 
 // Users page component
 export default async function Users() {
-    const Users = await prisma.users.findMany({
+    const users = await prisma.user.findMany({
         include: {
-            role_users_roleTorole: true
+            role_rel: true
         }
     });
     
@@ -39,7 +39,7 @@ export default async function Users() {
                 </Typography>
             </article>
             <UsersTable 
-                users={Users}
+                users={users}
                 roles={roles}
             />
         </>
