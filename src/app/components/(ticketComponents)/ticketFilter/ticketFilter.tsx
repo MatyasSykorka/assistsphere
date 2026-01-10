@@ -10,7 +10,6 @@ import {
     MenuItem,
     TextField,
     Autocomplete,
-    Grid,
     Button,
     SelectChangeEvent,
     Container
@@ -20,6 +19,10 @@ interface FilterProps {
     priorities: { 
         priority_id: number; 
         priority_type: string 
+    }[];
+    rooms: {
+        room_id: number;
+        name: string;
     }[];
     categories: { 
         category_id: number; 
@@ -38,6 +41,7 @@ interface FilterProps {
 
 export default function TicketFilter({ 
     priorities, 
+    rooms,
     categories, 
     statuses, 
     users 
@@ -47,6 +51,7 @@ export default function TicketFilter({
     const searchParams = useSearchParams();
 
     const [priority, setPriority] = useState<string>(searchParams.get("priority") || "");
+    const [room, setRoom] = useState<string>(searchParams.get("room") || "");
     const [category, setCategory] = useState<string>(searchParams.get("category") || "");
     const [status, setStatus] = useState<string>(searchParams.get("status") || "");
     const [user, setUser] = useState<string>(searchParams.get("user") || "");
@@ -54,6 +59,7 @@ export default function TicketFilter({
     // Sync state with URL params if they change externally
     useEffect(() => {
         setPriority(searchParams.get("priority") || "");
+        setRoom(searchParams.get("room") || "");
         setCategory(searchParams.get("category") || "");
         setStatus(searchParams.get("status") || "");
         setUser(searchParams.get("user") || "");
@@ -68,6 +74,13 @@ export default function TicketFilter({
         else {
             params.delete("priority");
         };
+
+        if (room) {
+            params.set("room", room);
+        }
+        else {
+            params.delete("room");
+        }
 
         if (category) {
             params.set("category", category);
@@ -95,6 +108,7 @@ export default function TicketFilter({
 
     const clearFilters = () => {
         setPriority("");
+        setRoom("");
         setCategory("");
         setStatus("");
         setUser("");
@@ -111,23 +125,20 @@ export default function TicketFilter({
                 boxShadow: 1 
             }}
         >
-            <Container  
+            <Container
+                maxWidth={false}
+                disableGutters
                 sx={{ 
                     display: 'grid', 
                     gridTemplateColumns: { 
                         xs: '1fr', 
                         sm: '1fr 1fr', 
-                        md: 'repeat(6, 1fr)' 
+                        md: 'repeat(4, 1fr)' 
                     }, 
                     gap: 2 
                 }}
             >
-                <Grid 
-                    item 
-                    xs={12} 
-                    sm={6} 
-                    md={2}
-                >
+                <Box sx={{ gridColumn: { md: 'span 1' } }}>
                     <FormControl 
                         fullWidth 
                         size="small"
@@ -164,13 +175,38 @@ export default function TicketFilter({
                             ))}
                         </Select>
                     </FormControl>
-                </Grid>
-                <Grid 
-                    item 
-                    xs={12} 
-                    sm={6} 
-                    md={2}
-                >
+                </Box>
+                <Box sx={{ gridColumn: { md: 'span 1' } }}>
+                    <FormControl
+                        fullWidth
+                        size="small"
+                    >
+                        <InputLabel
+                            id="room-label"
+                        >
+                            Room
+                        </InputLabel>
+                        <Select
+                            labelId="room-label"
+                            value={room}
+                            label="Room"
+                            onChange={(e: SelectChangeEvent) => setRoom(e.target.value)}
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {rooms.map((r) => (
+                                <MenuItem
+                                    key={r.room_id}
+                                    value={r.room_id.toString()}
+                                >
+                                    {r.name}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                </Box>
+                <Box sx={{ gridColumn: { md: 'span 1' } }}>
                     <FormControl 
                         fullWidth 
                         size="small"
@@ -207,13 +243,8 @@ export default function TicketFilter({
                             ))}
                         </Select>
                     </FormControl>
-                </Grid>
-                <Grid 
-                    item 
-                    xs={12} 
-                    sm={6} 
-                    md={2}
-                >
+                </Box>
+                <Box sx={{ gridColumn: { md: 'span 1' } }}>
                     <FormControl 
                         fullWidth 
                         size="small"
@@ -250,13 +281,8 @@ export default function TicketFilter({
                             ))}
                         </Select>
                     </FormControl>
-                </Grid>
-                <Grid 
-                    item 
-                    xs={12} 
-                    sm={6} 
-                    md={3}
-                >
+                </Box>
+                <Box sx={{ gridColumn: { md: 'span 3' } }}>
                     <Autocomplete
                         options={users}
                         getOptionLabel={
@@ -280,18 +306,16 @@ export default function TicketFilter({
                             (option, value) => option.id === value.id
                         }
                     />
-                </Grid>
-                <Grid 
-                    item 
-                    xs={12} 
-                    md={3} 
-                    sx={{ 
-                        display: 'flex', 
-                        gap: 1, 
-                        justifyContent: { 
-                            xs: 'flex-start', 
-                            md: 'flex-end' 
-                        } 
+                </Box>
+                <Box
+                    sx={{
+                        gridColumn: { md: 'span 1' },
+                        display: 'flex',
+                        gap: 1,
+                        justifyContent: {
+                            xs: 'flex-start',
+                            md: 'flex-end',
+                        },
                     }}
                 >
                     <Button 
@@ -309,7 +333,7 @@ export default function TicketFilter({
                     >
                         Search
                     </Button>
-                </Grid>
+                </Box>
             </Container>
         </Box>
     );

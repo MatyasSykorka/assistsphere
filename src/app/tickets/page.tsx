@@ -9,9 +9,9 @@ import { redirect } from "next/navigation";
 // MUI components
 import Typography from "@mui/material/Typography";
 import { 
-    Container, 
-    Grid
+    Container
 } from "@mui/material";
+import Box from "@mui/material/Box";
 
 // import custom components
 import Header from "@/app/components/header/Header";
@@ -27,12 +27,14 @@ export default async function Tickets(props: {
     const priorityFilter = searchParams?.priority ? Number(searchParams.priority) : undefined;
     const categoryFilter = searchParams?.category ? Number(searchParams.category) : undefined;
     const statusFilter = searchParams?.status ? Number(searchParams.status) : undefined;
+    const roomFilter = searchParams?.room ? Number(searchParams.room) : undefined;
     const userFilter = typeof searchParams?.user === 'string' ? searchParams.user : undefined;
 
     const whereClause: Prisma.ticketWhereInput = {
         ...(priorityFilter && { priority: priorityFilter }),
         ...(categoryFilter && { category: categoryFilter }),
         ...(statusFilter && { status: statusFilter }),
+        ...(roomFilter && { room: roomFilter }),
         ...(userFilter && { reported_user: userFilter }),
     };
 
@@ -73,7 +75,8 @@ export default async function Tickets(props: {
     }
 
     const currentUserId = session.user.id;
-    let currentUserRole = (session.user as any).role_id as number | undefined;
+    const currentUserRoleFromSession = (session.user as unknown as { role_id?: number }).role_id;
+    let currentUserRole = typeof currentUserRoleFromSession === "number" ? currentUserRoleFromSession : undefined;
 
     if (typeof currentUserRole !== "number") {
         const user = await prisma.user.findUnique({
@@ -86,6 +89,15 @@ export default async function Tickets(props: {
     const priorities = await prisma.priority.findMany();
     const categories = await prisma.category.findMany();
     const allStatuses = await prisma.status.findMany();
+    const rooms = await prisma.room.findMany({
+        select: {
+            room_id: true,
+            name: true,
+        },
+        orderBy: {
+            name: "asc",
+        },
+    });
     const users = await prisma.user.findMany({
         select: { 
             id: true, 
@@ -117,18 +129,12 @@ export default async function Tickets(props: {
                     priorities={priorities}
                     categories={categories}
                     statuses={allStatuses}
+                    rooms={rooms}
                     users={users}
                 />
-                <Grid 
-                    container 
-                    spacing={3}
-                >
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 3 }}>
                     {tickets.map((ticket) => (
-                        <Grid 
-                            item 
-                            sx={{ width: 350 }}
-                            key={ticket.ticket_id}
-                        >
+                        <Box key={ticket.ticket_id} sx={{ width: 350 }}>
                             <TicketCard 
                                 ticket={{
                                     ...ticket,
@@ -138,10 +144,9 @@ export default async function Tickets(props: {
                                 currentUserRole={currentUserRole}
                                 statuses={allStatuses}
                             />
-                            
-                        </Grid>
+                        </Box>
                     ))}
-                </Grid>
+                </Box>
             </Container>
         </>
     );

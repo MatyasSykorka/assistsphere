@@ -24,7 +24,7 @@ export default function About() {
                 <Typography
                     variant="body1"
                 >
-                    AssistSphere is a project developed by Matyáš Sýkora as part of his graduation thesis. The platform aims to provide comprehensive assistance solutions for various needs, leveraging modern web technologies and user-centric design principles.
+                    AssistSphere is a project developed by Matyáš Sýkora as part of his maturita exams. The platform aims to provide comprehensive assistance solutions for various needs, leveraging modern web technologies and user-centric design principles.
                 </Typography>
                 <Typography
                     variant="body1"
