@@ -7,11 +7,16 @@ export const auth = betterAuth({
     }),
     emailAndPassword: {
         enabled: true,
+        autoSignIn: false,
     },
     user: {
         additionalFields: {
             role_id: {
                 type: "number",
+            },
+            phone_number: {
+                type: "string",
+                required: false,
             },
         },
     },

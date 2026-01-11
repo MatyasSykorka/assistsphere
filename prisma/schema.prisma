@@ -8,18 +8,21 @@ datasource db {
 }
 
 model User {
-  id            String    @id
-  name          String
-  email         String    
-  emailVerified Boolean   @default(false)
-  image         String?
-  phone_number  String?   @db.VarChar
-  role_id       Int?      @default(3)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                String    @id
+  name              String
+  email             String    
+  emailVerified     Boolean   @default(false)
+  image             String?
+  phone_number      String?   @db.VarChar
+  role_id           Int      @default(3)
+
+  theme_preference  String    @default("light") @db.VarChar(255)
   
-  sessions      Session[]
-  accounts      Account[]
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  
+  sessions          Session[]
+  accounts          Account[]
 
   // Relace přidané z komentáře
   role_rel                             role?               @relation("users_roleTorole", fields: [role_id], references: [role_id], onDelete: NoAction, onUpdate: NoAction)
@@ -145,6 +148,7 @@ model ticket {
   solved_at                                                     DateTime?          @db.Timestamp(6)
   ticket_attachment                                             Int?
   processing_user                                               String?            
+  adminOrManagerCommentId                                       Int?               @unique @map("admin_or_manager_comment_id")
   
   category_ticket_categoryTocategory                            category           @relation("ticket_categoryTocategory", fields: [category], references: [category_id], onDelete: NoAction, onUpdate: NoAction)
   description_ticket_descriptionTodescription                   description        @relation("ticket_descriptionTodescription", fields: [description], references: [description_id], onDelete: NoAction, onUpdate: NoAction)
@@ -157,6 +161,16 @@ model ticket {
   room_ticket_roomToroom                                        room               @relation("ticket_roomToroom", fields: [room], references: [room_id], onDelete: NoAction, onUpdate: NoAction)
   status_ticket_statusTostatus                                  status             @relation("ticket_statusTostatus", fields: [status], references: [status_id], onDelete: NoAction, onUpdate: NoAction)
   ticket_attachment_ticket_ticket_attachmentToticket_attachment ticket_attachment? @relation("ticket_ticket_attachmentToticket_attachment", fields: [ticket_attachment], references: [attachment_id], onDelete: NoAction, onUpdate: NoAction)
+
+  adminOrManagerComment                                         AdminOrManagerComment? @relation("TicketToAdminOrManagerComment", fields: [adminOrManagerCommentId], references: [id], onDelete: SetNull, onUpdate: NoAction)
+}
+
+model AdminOrManagerComment {
+  id       Int    @id @default(autoincrement())
+  text     String @db.Text
+  ticket   ticket? @relation("TicketToAdminOrManagerComment")
+
+  @@map("admin_or_manager_comment")
 }
 
 model ticket_attachment {

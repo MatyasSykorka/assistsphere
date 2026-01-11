@@ -33,6 +33,9 @@ export default async function Users() {
             />
             <article>
                 <Typography
+                    sx={{
+                        textAlign: "center",
+                    }}
                     variant="h4"
                 >
                     Here you can view and manage all user accounts, including roles and permissions.

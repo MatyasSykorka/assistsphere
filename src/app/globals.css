@@ -1,9 +1,10 @@
 /* globals.css */
+html,
 body {
-    padding: 1rem;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    display: flex;
-    flex-direction: column;
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
 }

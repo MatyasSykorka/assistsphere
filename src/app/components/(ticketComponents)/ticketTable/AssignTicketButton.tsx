@@ -12,6 +12,8 @@ interface AssignTicketButtonProps {
     ticketId: number;
     isAssignedToMe: boolean;
     isAssignedToOther: boolean;
+    onAssignedToMe?: () => void;
+    onUnassigned?: () => void;
 }
 
 export default function AssignTicketButton(
@@ -19,6 +21,8 @@ export default function AssignTicketButton(
         ticketId, 
         isAssignedToMe,
         isAssignedToOther,
+        onAssignedToMe,
+        onUnassigned,
     }: AssignTicketButtonProps
 ) {
     const [loading, setLoading] = useState(false);
@@ -39,6 +43,12 @@ export default function AssignTicketButton(
                             "Failed to assign ticket"
                     )
                 );
+            } else {
+                if (isAssignedToMe) {
+                    onUnassigned?.();
+                } else {
+                    onAssignedToMe?.();
+                }
             }
         } 
         catch {

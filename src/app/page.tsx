@@ -1,11 +1,13 @@
 // Next.js components
 import Link from "next/link";
+import { headers } from "next/headers";
+
+import { auth } from "@/lib/auth";
 
 // MUI components
 import {
     Box,
     Button,
-    Container,
     Stack,
     Typography,
 } from "@mui/material";
@@ -14,9 +16,14 @@ import {
 import Header from "@/app/components/header/Header";
 
 // Home page component
-export default function Home() {
-    return (
-        <Container maxWidth="md">
+export default async function Home() {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    const isLoggedIn = Boolean(session?.user);
+
+    const content = (
             <Box
                 sx={{
                     display: "flex",
@@ -47,33 +54,55 @@ export default function Home() {
                         component="p" 
                         color="text.secondary"
                     >
-                        To send a report ticket, please log in or register an account.
+                        {isLoggedIn
+                            ? "You are logged in."
+                            : "To send a report ticket, please log in or register an account."}
                     </Typography>
                 </main>
-                <Stack 
-                    direction="row" 
-                    spacing={2}
-                >
-                    <Button
-                        href="/login"
-                        component={Link}
-                        variant="contained"
-                        color="primary"
-                        size="large"
+
+                {!isLoggedIn && (
+                    <Stack 
+                        direction="row" 
+                        spacing={2}
                     >
-                        Log in
-                    </Button>
-                    <Button
-                        href="/register"
-                        component={Link}
-                        variant="outlined"
-                        color="primary"
-                        size="large"
-                    >
-                        Register
-                    </Button>
-                </Stack>
+                        <Button
+                            href="/login"
+                            component={Link}
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                        >
+                            Log in
+                        </Button>
+                        <Button
+                            href="/register"
+                            component={Link}
+                            variant="outlined"
+                            color="primary"
+                            size="large"
+                        >
+                            Register
+                        </Button>
+                    </Stack>
+                )}
             </Box>
-        </Container>
     );
+
+    if (!isLoggedIn) {
+        return (
+            <Box
+                sx={{
+                    bgcolor: "common.white",
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    py: { xs: 4, sm: 6 },
+                }}
+            >
+                {content}
+            </Box>
+        );
+    }
+
+    return content;
 }

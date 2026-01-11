@@ -16,15 +16,14 @@ import {
     Button,
     TableSortLabel,
     Box,
-    Container
+    Container,
+    Paper
 } from "@mui/material";
 
 // import modal and action components
 import ChangeRoleModal from "@/app/components/(userTable)/changeRole/changeRoleModal";
 import DeleteUserModal from "@/app/components/(userTable)/deleteUser/deleteUserModal";
-
-// MUI color imports
-import { blue } from "@mui/material/colors";
+import AddUserModal from "@/app/components/(userTable)/addUser/addUserModal";
 
 // MUI utils
 import { visuallyHidden } from '@mui/utils';
@@ -128,6 +127,7 @@ export default function UsersTable(
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [userToDelete, setUserToDelete] = useState<User | null>(null);
+    const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
 
     const handleRequestSort = (property: keyof User) => {
         const isAsc = orderBy === property && order === 'asc';
@@ -163,21 +163,57 @@ export default function UsersTable(
         setUserToDelete(null);
     };
 
+    const handleOpenAddUserModal = () => {
+        setIsAddUserModalOpen(true);
+    };
+
+    const handleCloseAddUserModal = () => {
+        setIsAddUserModalOpen(false);
+    };
+
     return (
         <Container>
-            <TableContainer>
+            <Box
+                sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    mt: 2,
+                }}
+            >
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleOpenAddUserModal}
+                >
+                    Add user
+                </Button>
+            </Box>
+            <TableContainer
+                component={Paper}
+                variant="outlined"
+                sx={{
+                    mt: 2,
+                    borderRadius: 2,
+                    overflow: "hidden",
+                    bgcolor: "background.paper",
+                }}
+            >
                 <Table 
                     sx={{ 
-                        marginTop: "1rem", 
-                        border: "1px solid #ccc", 
-                        borderRadius: "8px" 
+                        minWidth: 650,
+                        "& .MuiTableCell-head": {
+                            fontWeight: 700,
+                            color: "text.primary",
+                            whiteSpace: "nowrap",
+                        },
                     }}
                 >
                     <TableHead>
                         <TableRow 
-                            sx={{ 
-                                backgroundColor: `${blue[100]}` 
-                            }}>
+                            sx={{
+                                bgcolor: (theme) => theme.palette.action.hover,
+                            }}
+                        >
                             {headCells.map((headCell) => (
                                 <TableCell
                                     key={headCell.id}
@@ -195,7 +231,7 @@ export default function UsersTable(
                                                 )
                                             }
                                         >
-                                            <b>{headCell.label}</b>
+                                            {headCell.label}
                                             {orderBy === headCell.id ? (
                                                 <Box 
                                                     component="span" 
@@ -210,7 +246,7 @@ export default function UsersTable(
                                             ) : null}
                                         </TableSortLabel>
                                     ) : (
-                                        <b>{headCell.label}</b>
+                                        headCell.label
                                     )}
                                 </TableCell>
                             ))}
@@ -221,6 +257,11 @@ export default function UsersTable(
                             <TableRow 
                                 key={user.id} 
                                 hover
+                                sx={{
+                                    "&:hover": {
+                                        bgcolor: (theme) => theme.palette.action.hover,
+                                    },
+                                }}
                             >
                                 <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.name}</TableCell>
@@ -270,6 +311,11 @@ export default function UsersTable(
                 open={isDeleteModalOpen}
                 onClose={handleCloseDeleteModal}
                 user={userToDelete}
+            />
+            <AddUserModal
+                open={isAddUserModalOpen}
+                onClose={handleCloseAddUserModal}
+                roles={roles}
             />
         </Container>
     );

@@ -11,13 +11,15 @@ export default function Footer() {
                 style={{
                     position: "fixed",
                     left: 0,
+                    right: 0,
                     bottom: 0,
-                    width: "100vw",
+                    width: "100%",
                     padding: "1rem 0",
                     borderTop: "1px solid #ccc",
                     zIndex: 100,
                     textAlign: "center",
-                    backgroundColor: "#fff"
+                    backgroundColor: "#fff",
+                    boxSizing: "border-box",
                 }}
             >
                 <Typography

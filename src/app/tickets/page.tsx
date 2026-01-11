@@ -47,7 +47,8 @@ export default async function Tickets(props: {
             priority_ticket_priorityTopriority: true,
             category_ticket_categoryTocategory: true,
             user_reported: true,
-            user_processing: true
+            user_processing: true,
+            adminOrManagerComment: true,
         },
         orderBy: {
             created_time: 'desc'
@@ -114,6 +115,9 @@ export default async function Tickets(props: {
             />
             <article>
                 <Typography
+                    sx={{
+                        textAlign: "center"
+                    }}
                     variant="h4"
                 >
                     Here you can view and manage all reported tickets submitted by users.

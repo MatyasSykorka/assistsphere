@@ -1,6 +1,6 @@
 import Header from "@/app/components/header/Header";
 import { prisma } from "@/lib/prisma";
-import { Container } from "@mui/material";
+import { Box } from "@mui/material";
 import AdminForms from "./AdminForms";
 
 export default async function AdminPanel() {
@@ -31,9 +31,18 @@ export default async function AdminPanel() {
                 subtitle="Add new rooms, room types and floors."
             />
 
-            <Container sx={{ mt: 4, mb: 6 }} maxWidth="md">
-                <AdminForms floors={floors} roomTypes={roomTypes} rooms={rooms} />
-            </Container>
+            <Box 
+                sx={{ 
+                    mt: 4,
+                    mb: 8,
+                }} 
+            >
+                <AdminForms 
+                    floors={floors} 
+                    roomTypes={roomTypes} 
+                    rooms={rooms}
+                />
+            </Box>
         </>
     );
 } 

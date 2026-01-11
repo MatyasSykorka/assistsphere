@@ -12,11 +12,16 @@ export default function Header(
     { title, subtitle } : HeaderProps 
 ) {
     return (
-        <header>
+        <header
+            style={{
+                textAlign: "center",
+            }}
+        >
             <Typography 
                 variant="h2" 
                 component="h1" 
                 gutterBottom
+                align="center"
                 sx={{
                     marginTop: "3vh",
                     fontWeight: "bold"
@@ -27,7 +32,8 @@ export default function Header(
             <Typography 
                 variant="h4" 
                 component="h2" 
-                color="textSecondary"
+                color="text.secondary"
+                align="center"
                 sx={{
                     marginBottom: "5vh"
                 }}

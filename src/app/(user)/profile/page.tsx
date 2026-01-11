@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 // MUI component list
 import {
     Typography,
-    Container,
     Box,
     Card,
     CardContent,
@@ -66,23 +65,21 @@ export default async function Profile() {
                 title="Profile settings"
                 subtitle="Manage your profile information and preferences."
             />
-            <Container 
-                maxWidth="md" 
+            <Box 
                 sx={{ 
                     mt: 4, 
                     mb: 8 
                 }}
             >
                 <Paper 
-                    elevation={0} 
+                    elevation={0}
+                    variant="outlined"
                     sx={{ 
                         p: { 
-                            xs: 3, 
                             md: 5 
                         }, 
                         borderRadius: 4, 
-                        border: '1px solid', 
-                        borderColor: 'divider' 
+                        bgcolor: 'background.paper'
                     }}
                 >
                     {/* Header Section */}
@@ -140,94 +137,98 @@ export default async function Profile() {
                                 justifyContent: 'center'
                             }}
                         >
-                            <Box 
-                                sx={{ 
-                                    p: 2, 
-                                    bgcolor: 'grey.50', 
-                                    borderRadius: 2 
-                                }}
-                            >
-                                <Typography 
-                                    variant="caption" 
-                                    color="text.secondary" 
-                                    display="block" 
-                                    gutterBottom
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 2,
+                                        borderRadius: 2,
+                                        height: '100%',
+                                        bgcolor: 'background.default',
+                                    }}
                                 >
-                                    Full Name
-                                </Typography>
-                                <Typography 
-                                    variant="body1" 
-                                    fontWeight="medium"
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        gutterBottom
+                                    >
+                                        Full Name
+                                    </Typography>
+                                    <Typography variant="body1" fontWeight="medium">
+                                        {User?.name ?? "Not set"}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 2,
+                                        borderRadius: 2,
+                                        height: '100%',
+                                        bgcolor: 'background.default',
+                                    }}
                                 >
-                                    {User?.name ?? "Not set"}
-                                </Typography>
-                            </Box>
-                            <Box 
-                                sx={{ 
-                                    p: 2, 
-                                    bgcolor: 'grey.50', 
-                                    borderRadius: 2 
-                                }}
-                            >
-                                <Typography 
-                                    variant="caption" 
-                                    color="text.secondary" 
-                                    display="block" 
-                                    gutterBottom
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        gutterBottom
+                                    >
+                                        Email Address
+                                    </Typography>
+                                    <Typography variant="body1" fontWeight="medium">
+                                        {User?.email ?? "Not set"}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 2,
+                                        borderRadius: 2,
+                                        height: '100%',
+                                        bgcolor: 'background.default',
+                                    }}
                                 >
-                                    Email Address
-                                </Typography>
-                                <Typography 
-                                    variant="body1" 
-                                    fontWeight="medium"
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        gutterBottom
+                                    >
+                                        Phone Number
+                                    </Typography>
+                                    <Typography variant="body1" fontWeight="medium">
+                                        {User?.phone_number ?? "Not provided"}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                                <Paper
+                                    variant="outlined"
+                                    sx={{
+                                        p: 2,
+                                        borderRadius: 2,
+                                        height: '100%',
+                                        bgcolor: 'background.default',
+                                    }}
                                 >
-                                    {User?.email ?? "Not set"}
-                                </Typography>
-                            </Box>
-                            <Box 
-                                sx={{ 
-                                    p: 2, 
-                                    bgcolor: 'grey.50', 
-                                    borderRadius: 2 
-                                }}
-                            >
-                                <Typography 
-                                    variant="caption" 
-                                    color="text.secondary" 
-                                    display="block" 
-                                    gutterBottom
-                                >
-                                    Phone Number
-                                </Typography>
-                                <Typography 
-                                    variant="body1" 
-                                    fontWeight="medium"
-                                >
-                                    {User?.phone_number ?? "Not provided"}
-                                </Typography>
-                            </Box>
-                            <Box 
-                                sx={{ 
-                                    p: 2, 
-                                    bgcolor: 'grey.50', 
-                                    borderRadius: 2 
-                                }}
-                            >
-                                <Typography 
-                                    variant="caption" 
-                                    color="text.secondary" 
-                                    display="block" 
-                                    gutterBottom
-                                >
-                                    Role
-                                </Typography>
-                                <Typography 
-                                    variant="body1" 
-                                    fontWeight="medium"
-                                >
-                                    {User?.role_rel?.role_name ?? "User"}
-                                </Typography>
-                            </Box>
+                                    <Typography
+                                        variant="caption"
+                                        color="text.secondary"
+                                        display="block"
+                                        gutterBottom
+                                    >
+                                        Role
+                                    </Typography>
+                                    <Typography variant="body1" fontWeight="medium">
+                                        {User?.role_rel?.role_name ?? "User"}
+                                    </Typography>
+                                </Paper>
+                            </Grid>
                         </Grid>
                     </Box>
 
@@ -254,92 +255,78 @@ export default async function Profile() {
                                 justifyContent: 'center'
                             }}
                         >
-                            <Card 
-                                elevation={0} 
-                                sx={{ 
-                                    bgcolor: '#e3f2fd', 
-                                    borderRadius: 3, 
-                                    height: '100%' 
-                                }}
-                            >
-                                <CardContent>
-                                    <Stack 
-                                        direction="row" 
-                                        alignItems="center" 
-                                        spacing={2}
-                                    >
-                                        <Box 
-                                            sx={{ 
-                                                p: 1.5, 
-                                                bgcolor: 'white', 
-                                                borderRadius: '50%', 
-                                                display: 'flex' 
-                                            }}
-                                        >
-                                            <Assignment color="primary" />
-                                        </Box>
-                                        <Box>
-                                            <Typography 
-                                                variant="h4" 
-                                                fontWeight="bold" 
-                                                color="primary.main"
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Card
+                                    elevation={0}
+                                    variant="outlined"
+                                    sx={{
+                                        borderRadius: 3,
+                                        height: '100%',
+                                    }}
+                                >
+                                    <CardContent>
+                                        <Stack direction="row" alignItems="center" spacing={2}>
+                                            <Box
+                                                sx={{
+                                                    width: 44,
+                                                    height: 44,
+                                                    display: 'grid',
+                                                    placeItems: 'center',
+                                                    borderRadius: 2,
+                                                    bgcolor: 'primary.main',
+                                                    color: 'primary.contrastText',
+                                                }}
                                             >
-                                                {stats.reportedTickets}
-                                            </Typography>
-                                            <Typography 
-                                                variant="body2" 
-                                                color="text.secondary" 
-                                                fontWeight="medium"
+                                                <Assignment />
+                                            </Box>
+                                            <Box>
+                                                <Typography variant="h4" fontWeight="bold" color="text.primary">
+                                                    {stats.reportedTickets}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                                                    Reported Tickets
+                                                </Typography>
+                                            </Box>
+                                        </Stack>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
+                            <Grid size={{ xs: 12, sm: 6 }}>
+                                <Card
+                                    elevation={0}
+                                    variant="outlined"
+                                    sx={{
+                                        borderRadius: 3,
+                                        height: '100%',
+                                    }}
+                                >
+                                    <CardContent>
+                                        <Stack direction="row" alignItems="center" spacing={2}>
+                                            <Box
+                                                sx={{
+                                                    width: 44,
+                                                    height: 44,
+                                                    display: 'grid',
+                                                    placeItems: 'center',
+                                                    borderRadius: 2,
+                                                    bgcolor: 'success.main',
+                                                    color: 'success.contrastText',
+                                                }}
                                             >
-                                                Reported Tickets
-                                            </Typography>
-                                        </Box>
-                                    </Stack>
-                                </CardContent>
-                            </Card>
-                            <Card 
-                                elevation={0} 
-                                sx={{ 
-                                    bgcolor: '#e8f5e9', 
-                                    borderRadius: 3, 
-                                    height: '100%' 
-                                }}
-                            >
-                                <CardContent>
-                                    <Stack 
-                                        direction="row" 
-                                        alignItems="center" 
-                                        spacing={2}
-                                    >
-                                        <Box 
-                                            sx={{ 
-                                                p: 1.5, 
-                                                bgcolor: 'white', 
-                                                borderRadius: '50%', 
-                                                display: 'flex' 
-                                            }}
-                                        >
-                                            <AssignmentTurnedIn color="success" />
-                                        </Box>
-                                        <Box>
-                                            <Typography 
-                                                variant="h4" 
-                                                fontWeight="bold" 
-                                                color="success.main"
-                                            >
-                                                {stats.processedTickets}
-                                            </Typography>
-                                            <Typography 
-                                                variant="body2" 
-                                                color="text.secondary" 
-                                                fontWeight="medium"
-                                            >
-                                                Processed Tickets
-                                            </Typography>
-                                        </Box>
-                                    </Stack>
-                                </CardContent>
-                            </Card>
+                                                <AssignmentTurnedIn />
+                                            </Box>
+                                            <Box>
+                                                <Typography variant="h4" fontWeight="bold" color="text.primary">
+                                                    {stats.processedTickets}
+                                                </Typography>
+                                                <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                                                    Processed Tickets
+                                                </Typography>
+                                            </Box>
+                                        </Stack>
+                                    </CardContent>
+                                </Card>
+                            </Grid>
                         </Grid>
                     </Box>
 
@@ -388,7 +375,7 @@ export default async function Profile() {
                         </Stack>
                     </Box>
                 </Paper>
-            </Container>
+            </Box>
         </>
     );
 }
