@@ -59,6 +59,8 @@ export default async function Profile() {
         processedTickets: User?.ticket_ticket_processing_userToUser.length ?? 0
     };
 
+    const isAdminOrManager = User?.role_id === 1 || User?.role_id === 2;
+
     return (
         <>
             <Header
@@ -127,7 +129,14 @@ export default async function Profile() {
                             mb: 5,
                         }}
                     >
-                        <Typography variant="h6" fontWeight="bold" gutterBottom sx={{ mb: 3 }}>
+                        <Typography 
+                            variant="h6" 
+                            fontWeight="bold" 
+                            gutterBottom 
+                            sx={{ 
+                                mb: 3 
+                            }}
+                        >
                             Personal Information
                         </Typography>
                         <Grid 
@@ -137,7 +146,13 @@ export default async function Profile() {
                                 justifyContent: 'center'
                             }}
                         >
-                            <Grid size={{ xs: 12, sm: 6, md: 3 }}>
+                            <Grid 
+                                size={{ 
+                                    xs: 12, 
+                                    sm: 6, 
+                                    md: 3 
+                                }}
+                            >
                                 <Paper
                                     variant="outlined"
                                     sx={{
@@ -155,7 +170,10 @@ export default async function Profile() {
                                     >
                                         Full Name
                                     </Typography>
-                                    <Typography variant="body1" fontWeight="medium">
+                                    <Typography 
+                                        variant="body1" 
+                                        fontWeight="medium"
+                                    >
                                         {User?.name ?? "Not set"}
                                     </Typography>
                                 </Paper>
@@ -178,7 +196,10 @@ export default async function Profile() {
                                     >
                                         Email Address
                                     </Typography>
-                                    <Typography variant="body1" fontWeight="medium">
+                                    <Typography 
+                                        variant="body1" 
+                                        fontWeight="medium"
+                                    >
                                         {User?.email ?? "Not set"}
                                     </Typography>
                                 </Paper>
@@ -201,7 +222,10 @@ export default async function Profile() {
                                     >
                                         Phone Number
                                     </Typography>
-                                    <Typography variant="body1" fontWeight="medium">
+                                    <Typography 
+                                        variant="body1" 
+                                        fontWeight="medium"
+                                    >
                                         {User?.phone_number ?? "Not provided"}
                                     </Typography>
                                 </Paper>
@@ -224,7 +248,10 @@ export default async function Profile() {
                                     >
                                         Role
                                     </Typography>
-                                    <Typography variant="body1" fontWeight="medium">
+                                    <Typography 
+                                        variant="body1" 
+                                        fontWeight="medium"
+                                    >
                                         {User?.role_rel?.role_name ?? "User"}
                                     </Typography>
                                 </Paper>
@@ -255,7 +282,12 @@ export default async function Profile() {
                                 justifyContent: 'center'
                             }}
                         >
-                            <Grid size={{ xs: 12, sm: 6 }}>
+                            <Grid 
+                                size={{ 
+                                    xs: 12, 
+                                    sm: 6 
+                                }}
+                            >
                                 <Card
                                     elevation={0}
                                     variant="outlined"
@@ -265,7 +297,11 @@ export default async function Profile() {
                                     }}
                                 >
                                     <CardContent>
-                                        <Stack direction="row" alignItems="center" spacing={2}>
+                                        <Stack 
+                                            direction="row" 
+                                            alignItems="center" 
+                                            spacing={2}
+                                        >
                                             <Box
                                                 sx={{
                                                     width: 44,
@@ -280,10 +316,18 @@ export default async function Profile() {
                                                 <Assignment />
                                             </Box>
                                             <Box>
-                                                <Typography variant="h4" fontWeight="bold" color="text.primary">
+                                                <Typography 
+                                                    variant="h4" 
+                                                    fontWeight="bold" 
+                                                    color="text.primary"
+                                                >
                                                     {stats.reportedTickets}
                                                 </Typography>
-                                                <Typography variant="body2" color="text.secondary" fontWeight="medium">
+                                                <Typography 
+                                                    variant="body2" 
+                                                    color="text.secondary" 
+                                                    fontWeight="medium"
+                                                >
                                                     Reported Tickets
                                                 </Typography>
                                             </Box>
@@ -291,42 +335,61 @@ export default async function Profile() {
                                     </CardContent>
                                 </Card>
                             </Grid>
-                            <Grid size={{ xs: 12, sm: 6 }}>
-                                <Card
-                                    elevation={0}
-                                    variant="outlined"
-                                    sx={{
-                                        borderRadius: 3,
-                                        height: '100%',
+                            {isAdminOrManager && (
+                                <Grid 
+                                    size={{ 
+                                        xs: 12, 
+                                        sm: 6 
                                     }}
                                 >
-                                    <CardContent>
-                                        <Stack direction="row" alignItems="center" spacing={2}>
-                                            <Box
-                                                sx={{
-                                                    width: 44,
-                                                    height: 44,
-                                                    display: 'grid',
-                                                    placeItems: 'center',
-                                                    borderRadius: 2,
-                                                    bgcolor: 'success.main',
-                                                    color: 'success.contrastText',
-                                                }}
+                                    <Card
+                                        elevation={0}
+                                        variant="outlined"
+                                        sx={{
+                                            borderRadius: 3,
+                                            height: '100%',
+                                        }}
+                                    >
+                                        <CardContent>
+                                            <Stack 
+                                                direction="row" 
+                                                alignItems="center" 
+                                                spacing={2}
                                             >
-                                                <AssignmentTurnedIn />
-                                            </Box>
-                                            <Box>
-                                                <Typography variant="h4" fontWeight="bold" color="text.primary">
-                                                    {stats.processedTickets}
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary" fontWeight="medium">
-                                                    Processed Tickets
-                                                </Typography>
-                                            </Box>
-                                        </Stack>
-                                    </CardContent>
-                                </Card>
-                            </Grid>
+                                                <Box
+                                                    sx={{
+                                                        width: 44,
+                                                        height: 44,
+                                                        display: 'grid',
+                                                        placeItems: 'center',
+                                                        borderRadius: 2,
+                                                        bgcolor: 'success.main',
+                                                        color: 'success.contrastText',
+                                                    }}
+                                                >
+                                                    <AssignmentTurnedIn />
+                                                </Box>
+                                                <Box>
+                                                    <Typography 
+                                                        variant="h4" 
+                                                        fontWeight="bold" 
+                                                        color="text.primary"
+                                                    >
+                                                        {stats.processedTickets}
+                                                    </Typography>
+                                                    <Typography 
+                                                        variant="body2" 
+                                                        color="text.secondary" 
+                                                        fontWeight="medium"
+                                                    >
+                                                        Processed tickets
+                                                    </Typography>
+                                                </Box>
+                                            </Stack>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            )}
                         </Grid>
                     </Box>
 
@@ -365,7 +428,9 @@ export default async function Profile() {
                             
                             <Box 
                                 sx={{ 
-                                    pt: 2 
+                                    pt: 2,
+                                    display: "flex",
+                                    justifyContent: "center",
                                 }}
                             >
                                 <DeleteAccountButton 

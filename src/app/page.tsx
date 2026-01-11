@@ -74,15 +74,6 @@ export default async function Home() {
                         >
                             Log in
                         </Button>
-                        <Button
-                            href="/register"
-                            component={Link}
-                            variant="outlined"
-                            color="primary"
-                            size="large"
-                        >
-                            Register
-                        </Button>
                     </Stack>
                 )}
             </Box>

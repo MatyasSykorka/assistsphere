@@ -382,7 +382,9 @@ export default function TicketCard({
                     <Typography 
                         variant="body1" 
                         sx={{ 
-                            whiteSpace: 'pre-wrap' 
+                            whiteSpace: "pre-wrap",
+                            overflowWrap: "anywhere",
+                            wordBreak: "break-word",
                         }}
                     >
                         {ticket.description_ticket_descriptionTodescription?.description}
@@ -427,7 +429,14 @@ export default function TicketCard({
                         </Stack>
                     ) : (
                         <Stack spacing={0.5}>
-                            <Typography variant="body1" sx={{ whiteSpace: "pre-wrap" }}>
+                            <Typography
+                                variant="body1"
+                                sx={{
+                                    whiteSpace: "pre-wrap",
+                                    overflowWrap: "anywhere",
+                                    wordBreak: "break-word",
+                                }}
+                            >
                                 {ticket.adminOrManagerComment?.text?.trim()?.length
                                     ? ticket.adminOrManagerComment.text
                                     : "No comment yet."}
