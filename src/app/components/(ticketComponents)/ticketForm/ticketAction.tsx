@@ -9,8 +9,8 @@ import { headers } from "next/headers";
 export interface CreateTicketInput {
     title: string;
     description: string;
-    roomId: string;
-    categoryId: string;
+    roomId: number;
+    categoryId: number;
     priorityId: number;
 }
 

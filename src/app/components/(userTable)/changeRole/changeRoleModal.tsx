@@ -44,14 +44,14 @@ export default function ChangeRoleModal({
     user,
     roles
 }: ChangeRoleModalProps) {
-    const [role, setRole] = React.useState<string | number>('');
+    const [role, setRole] = React.useState<string>("");
     const router = useRouter();
 
     React.useEffect(() => {
         if (user?.role_rel?.role_id) {
-            setRole(user.role_rel.role_id);
+            setRole(String(user.role_rel.role_id));
         } else {
-            setRole('');
+            setRole("");
         }
     }, [user]);
 
@@ -59,7 +59,7 @@ export default function ChangeRoleModal({
         return null;
     }
 
-    const handleChange = (event: SelectChangeEvent) => {
+    const handleChange = (event: SelectChangeEvent<string>) => {
         setRole(event.target.value);
     };
 
@@ -97,7 +97,7 @@ export default function ChangeRoleModal({
                         onChange={handleChange}
                     >
                         {roles.filter(r => r.role_name !== "Administrator").map(r => (
-                            <MenuItem key={r.role_id} value={r.role_id}>
+                            <MenuItem key={r.role_id} value={String(r.role_id)}>
                                 {r.role_name}
                             </MenuItem>
                         ))}
