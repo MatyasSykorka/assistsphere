@@ -1,95 +1,99 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+// Next.js components
+import Link from "next/link";
+import { headers } from "next/headers";
 
-export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+import { auth } from "@/lib/auth";
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+// MUI components
+import {
+    Box,
+    Button,
+    Stack,
+    Typography,
+} from "@mui/material";
+
+// import custom components
+import Header from "@/app/components/header/Header";
+
+// Home page component
+export default async function Home() {
+    const session = await auth.api.getSession({
+        headers: await headers(),
+    });
+
+    const isLoggedIn = Boolean(session?.user);
+
+    const content = (
+            <Box
+                sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    minHeight: "80vh",
+                    textAlign: "center",
+                    gap: 4,
+                }}
+            >
+                <Header
+                    title="Welcome to AssistSphere"
+                    subtitle="Your solution for all assistance needs."
+                />
+                <main>
+                    <Typography 
+                        variant="body1" 
+                        sx={{ 
+                            mb: 2 
+                        }}
+                    >
+                        AssistSphere is a modern ticketing system developed as a graduation project.
+                        It helps users easily submit report tickets and track their status.
+                    </Typography>
+                    <Typography 
+                        variant="h5" 
+                        component="p" 
+                        color="text.secondary"
+                    >
+                        {isLoggedIn
+                            ? "You are logged in."
+                            : "To send a report ticket, please log in or register an account."}
+                    </Typography>
+                </main>
+
+                {!isLoggedIn && (
+                    <Stack 
+                        direction="row" 
+                        spacing={2}
+                    >
+                        <Button
+                            href="/login"
+                            component={Link}
+                            variant="contained"
+                            color="primary"
+                            size="large"
+                        >
+                            Log in
+                        </Button>
+                    </Stack>
+                )}
+            </Box>
+    );
+
+    if (!isLoggedIn) {
+        return (
+            <Box
+                sx={{
+                    bgcolor: "common.white",
+                    minHeight: "100vh",
+                    display: "flex",
+                    alignItems: "center",
+                    py: { xs: 4, sm: 6 },
+                }}
+            >
+                {content}
+            </Box>
+        );
+    }
+
+    return content;
 }
