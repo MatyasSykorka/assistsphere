@@ -5,11 +5,12 @@ import { Typography } from "@mui/material";
 type HeaderProps = {
     title?: string;
     subtitle?: string; // volitelný prop
+    dense?: boolean;
 };
 
 // Header component
 export default function Header( 
-    { title, subtitle } : HeaderProps 
+    { title, subtitle, dense = false } : HeaderProps 
 ) {
     return (
         <header
@@ -23,8 +24,9 @@ export default function Header(
                 gutterBottom
                 align="center"
                 sx={{
-                    marginTop: "3vh",
-                    fontWeight: "bold"
+                    mt: dense ? 0 : "3vh",
+                    fontWeight: "bold",
+                    fontSize: { xs: "2.2rem", sm: "3rem" },
                 }}
             >
                 { title || "AssistSphere" }
@@ -35,7 +37,8 @@ export default function Header(
                 color="text.secondary"
                 align="center"
                 sx={{
-                    marginBottom: "5vh"
+                    mb: dense ? 0 : "5vh",
+                    fontSize: { xs: "1.25rem", sm: "1.75rem" },
                 }}
             >
                 { subtitle || "Your solution for all assistance needs." }
