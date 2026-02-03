@@ -35,7 +35,7 @@ COPY prisma ./prisma
 COPY prisma.config.ts ./prisma.config.ts
 COPY next.config.ts ./next.config.ts
 COPY tsconfig.json ./tsconfig.json
-COPY next-env.d.ts ./next-env.d.ts
+# COPY next-env.d.ts ./next-env.d.ts
 COPY eslint.config.mjs ./eslint.config.mjs
 COPY src ./src
 COPY public ./public

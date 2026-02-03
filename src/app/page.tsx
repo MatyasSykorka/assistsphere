@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import {
     Box,
     Button,
+    Paper,
     Stack,
     Typography,
 } from "@mui/material";
@@ -23,77 +24,91 @@ export default async function Home() {
 
     const isLoggedIn = Boolean(session?.user);
 
-    const content = (
-            <Box
+    return (
+        <Box
+            sx={{
+                minHeight: "80vh",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                py: { xs: 6, sm: 10 },
+            }}
+        >
+            <Paper
+                variant="outlined"
                 sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    minHeight: "80vh",
+                    width: "100%",
+                    maxWidth: 900,
+                    borderRadius: 3,
+                    p: { xs: 3, sm: 6 },
                     textAlign: "center",
-                    gap: 4,
+                    bgcolor: "background.paper",
                 }}
             >
-                <Header
-                    title="Welcome to AssistSphere"
-                    subtitle="Your solution for all assistance needs."
-                />
-                <main>
-                    <Typography 
-                        variant="body1" 
-                        sx={{ 
-                            mb: 2 
-                        }}
-                    >
-                        AssistSphere is a modern ticketing system developed as a graduation project.
-                        It helps users easily submit report tickets and track their status.
-                    </Typography>
-                    <Typography 
-                        variant="h5" 
-                        component="p" 
-                        color="text.secondary"
-                    >
-                        {isLoggedIn
-                            ? "You are logged in."
-                            : "To send a report ticket, please log in or register an account."}
-                    </Typography>
-                </main>
+                <Stack spacing={{ xs: 3, sm: 4 }} alignItems="center">
+                    <Header
+                        dense
+                        title="Welcome to AssistSphere"
+                        subtitle="Your solution for all assistance needs."
+                    />
 
-                {!isLoggedIn && (
-                    <Stack 
-                        direction="row" 
-                        spacing={2}
-                    >
-                        <Button
-                            href="/login"
-                            component={Link}
-                            variant="contained"
-                            color="primary"
-                            size="large"
+                    <Box component="main" sx={{ width: "100%" }}>
+                        <Typography
+                            variant="body1"
+                            sx={{
+                                mb: 2,
+                                maxWidth: 720,
+                                mx: "auto",
+                                color: "text.secondary",
+                            }}
                         >
-                            Log in
-                        </Button>
+                            AssistSphere is a modern ticketing system developed as a graduation project.
+                            It helps users easily submit report tickets and track their status.
+                        </Typography>
+
+                        <Typography variant="h6" component="p" color="text.primary">
+                            {isLoggedIn
+                                ? "You are logged in."
+                                : "To send a report ticket, please log in or register an account."}
+                        </Typography>
+                    </Box>
+
+                    <Stack direction="row" spacing={2} flexWrap="wrap" justifyContent="center">
+                        {isLoggedIn ? (
+                            <Button
+                                href="/my_tickets"
+                                component={Link}
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                            >
+                                My tickets
+                            </Button>
+                        ) : (
+                            <>
+                                <Button
+                                    href="/login"
+                                    component={Link}
+                                    variant="contained"
+                                    color="primary"
+                                    size="large"
+                                >
+                                    Log in
+                                </Button>
+                                <Button
+                                    href="/register"
+                                    component={Link}
+                                    variant="outlined"
+                                    color="primary"
+                                    size="large"
+                                >
+                                    Register
+                                </Button>
+                            </>
+                        )}
                     </Stack>
-                )}
-            </Box>
+                </Stack>
+            </Paper>
+        </Box>
     );
-
-    if (!isLoggedIn) {
-        return (
-            <Box
-                sx={{
-                    bgcolor: "common.white",
-                    minHeight: "100vh",
-                    display: "flex",
-                    alignItems: "center",
-                    py: { xs: 4, sm: 6 },
-                }}
-            >
-                {content}
-            </Box>
-        );
-    }
-
-    return content;
 }
