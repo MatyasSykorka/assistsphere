@@ -85,26 +85,15 @@ export default async function Home() {
                                 My tickets
                             </Button>
                         ) : (
-                            <>
-                                <Button
-                                    href="/login"
-                                    component={Link}
-                                    variant="contained"
-                                    color="primary"
-                                    size="large"
-                                >
-                                    Log in
-                                </Button>
-                                <Button
-                                    href="/register"
-                                    component={Link}
-                                    variant="outlined"
-                                    color="primary"
-                                    size="large"
-                                >
-                                    Register
-                                </Button>
-                            </>
+                            <Button
+                                href="/login"
+                                component={Link}
+                                variant="contained"
+                                color="primary"
+                                size="large"
+                            >
+                                Log in
+                            </Button>
                         )}
                     </Stack>
                 </Stack>
