@@ -40,3 +40,6 @@ In assistsphere folder execute the following command in your terminal:
 
 ##### For Windows, if you run it in Docker Desktop you need to do:
 Install Windows Subsystem for Linux (WSL). Then open Docker Desktop and run the same command to deploy application in the assistphere folder.
+
+### Default admin information
+You need to edit .env file you created and uncomment variables under *Seed (optional)*.
