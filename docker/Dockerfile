@@ -3,19 +3,8 @@
 # Multi-stage build pro Next.js + Prisma aplikaci.
 # Používá Bun (shodné s lokálním vývojem v projektu).
 
-# Prisma CLI (a jeho instalační skripty) vyžaduje Node.js 20.19+.
-# Aplikace samotná může běžet přes Bun, ale pro `prisma generate/migrate` použijeme Node.
-
-FROM node:20.19-alpine AS node
-
 FROM oven/bun:1.1.38-alpine AS deps
 WORKDIR /app
-
-# Přidej Node tooling do Bun image (jen pro Prisma CLI)
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
-COPY --from=node /usr/local/bin/npm /usr/local/bin/npm
-COPY --from=node /usr/local/bin/npx /usr/local/bin/npx
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 
 # Nejdřív jen manifest, aby šel využít cache.
 COPY package.json ./
@@ -41,7 +30,7 @@ COPY src ./src
 COPY public ./public
 
 # Prisma Client
-RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public" node ./node_modules/prisma/build/index.js generate
+RUN DATABASE_URL="postgresql://dummy:dummy@localhost:5432/dummy?schema=public" bunx prisma generate
 
 # Build Next.js
 RUN bun run build
@@ -50,11 +39,6 @@ RUN bun run build
 FROM oven/bun:1.1.38-alpine AS runner
 WORKDIR /app
 
-# Přidej Node i do runtime image (kvůli `prisma migrate deploy` v docker-compose command)
-COPY --from=node /usr/local/bin/node /usr/local/bin/node
-COPY --from=node /usr/local/bin/npm /usr/local/bin/npm
-COPY --from=node /usr/local/bin/npx /usr/local/bin/npx
-COPY --from=node /usr/local/lib/node_modules /usr/local/lib/node_modules
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1

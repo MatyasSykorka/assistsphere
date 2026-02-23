@@ -33,6 +33,9 @@ This will create a **.env.local** file. Copy the key from it and replace "*<gene
 ### Generate/get API key for BETTER_AUTH_SECRET variable
 And last key you need to get is Better Auth API key. First you need to visit [Better-auth](https://www.better-auth.com/docs/installation) website and find button **Generate Secret** (Recommended) or type in Bash/Git Bash <html><head><code>openssl rand -base64 32</code>. Copy that and replace "*<create_in_better_auth_dashboard>*" in BETTER_AUTH_SECRET variable.
 
+### Generate node_modules and .next folders
+<html><head><code>bun install</code>
+
 ### Deployment with Docker 
 In assistsphere folder execute the following command in your terminal:
 
@@ -40,3 +43,6 @@ In assistsphere folder execute the following command in your terminal:
 
 ##### For Windows, if you run it in Docker Desktop you need to do:
 Install Windows Subsystem for Linux (WSL). Then open Docker Desktop and run the same command to deploy application in the assistphere folder.
+
+### Default admin information
+You need to edit .env file you created and uncomment variables under *Seed (optional)*.
